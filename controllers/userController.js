@@ -1,6 +1,8 @@
 const jwt = require('jsonwebtoken');
 const { User } = require('../models');
 const bcrypt = require('bcryptjs');
+const { uploadPromise } = require('./uploadCloud');
+const fs = require('fs');
 
 exports.userLoginGoogle = async (req, res, next) => {
   try {
@@ -180,13 +182,13 @@ exports.verifyUserforReset = async (req, res, next) => {
 };
 exports.resetpassword = async (req, res, next) => {
   try {
+    const { id } = req.params;
     const { confirmpassword, password } = req.body;
     if (password !== confirmpassword) return res.status(400).json();
-    const { id } = req.params;
     const hashedPassword = await bcrypt.hash(password, 12);
     const rows = await User.update(
-      { where: { id } },
-      { password: hashedPassword }
+      { password: hashedPassword },
+      { where: { id } }
     );
     if (!rows)
       return res
@@ -195,6 +197,122 @@ exports.resetpassword = async (req, res, next) => {
     res
       .status(201)
       .json({ message: 'Password changed successfully', status: 'success' });
+  } catch (err) {
+    next(err);
+  }
+};
+
+exports.updateProfile = async (req, res, next) => {
+  try {
+    // ตำแหน่ง  1 คือ profile ตำแหน่ง 2 คือ banner เสมอออ!!!!!!!!
+    // const { id } = req.user;
+    const { firstname, lastname, username, description } = req.body;
+    // console.log(req.files);
+    if (req.files) {
+      const urls = [];
+      for (const file of req.files) {
+        const { path } = file;
+        const result = await uploadPromise(path);
+        urls.push(result);
+        fs.unlinkSync(path);
+      }
+      // console.log(urls);
+      // console.log('Profile', urls[0].secure_url);
+      // console.log('Banner', urls[1].secure_url);
+      const rows = await User.update(
+        {
+          firstName: firstname,
+          lastName: lastname,
+          username,
+          description,
+          profileUrl: urls[0].secure_url,
+          bannerUrl: urls[1].secure_url,
+        },
+        { where: { id } }
+      );
+      if (!rows) return res.status(400).json({ message: 'Id does not match' });
+    } else {
+      const rows = await User.update(
+        {
+          firstName: firstname,
+          lastName: lastname,
+          username,
+          description,
+        },
+        { where: { id } }
+      );
+      if (!rows) return res.status(400).json({ message: 'Id does not match' });
+    }
+  } catch (err) {
+    next(err);
+  }
+};
+exports.updateProfileImg = async (req, res, next) => {
+  try {
+    const { id } = req.user;
+    const { firstname, lastname, username, description } = req.body;
+    console.log(req.file);
+    if (req.file) {
+      const result = await uploadPromise(req.file.path);
+      fs.unlinkSync(req.file.path);
+      const rows = await User.update(
+        {
+          firstName: firstname,
+          lastName: lastname,
+          username,
+          description,
+          profileUrl: result.secure_url,
+        },
+        { where: { id } }
+      );
+      if (!rows) return res.status(400).json({ message: 'Id does not match' });
+    } else {
+      const rows = await User.update(
+        {
+          firstName: firstname,
+          lastName: lastname,
+          username,
+          description,
+        },
+        { where: { id } }
+      );
+      if (!rows) return res.status(400).json({ message: 'Id does not match' });
+    }
+  } catch (err) {
+    next(err);
+  }
+};
+exports.updateBannerImg = async (req, res, next) => {
+  try {
+    const { id } = req.user;
+    const { firstname, lastname, username, description } = req.body;
+    console.log(req.file);
+    if (req.file) {
+      const result = await uploadPromise(req.file.path);
+      fs.unlinkSync(req.file.path);
+      const rows = await User.update(
+        {
+          firstName: firstname,
+          lastName: lastname,
+          username,
+          description,
+          bannerUrl: result.secure_url,
+        },
+        { where: { id } }
+      );
+      if (!rows) return res.status(400).json({ message: 'Id does not match' });
+    } else {
+      const rows = await User.update(
+        {
+          firstName: firstname,
+          lastName: lastname,
+          username,
+          description,
+        },
+        { where: { id } }
+      );
+      if (!rows) return res.status(400).json({ message: 'Id does not match' });
+    }
   } catch (err) {
     next(err);
   }
