@@ -18,10 +18,23 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.INTEGER,
         allowNull: false,
       },
+      imageUrl: {
+        type: DataTypes.TEXT,
+        allowNull: true,
+      },
+      videoUrl: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
       allowNotification: {
         type: DataTypes.BOOLEAN,
         allowNull: false,
         defaultValue: true,
+      },
+      status: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: false,
       },
     },
     {

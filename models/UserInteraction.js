@@ -2,9 +2,20 @@ module.exports = (sequelize, DataTypes) => {
   const UserInteraction = sequelize.define(
     'UserInteraction',
     {
-      ruleDetail: {
-        type: DataTypes.STRING,
+      isSaved: {
+        type: DataTypes.BOOLEAN,
         allowNull: false,
+        defaultValue: false,
+      },
+      isHided: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: false,
+      },
+      isLiked: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: false,
       },
     },
     {

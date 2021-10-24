@@ -8,9 +8,14 @@ const {
   getFeedUserSave,
   getAllUserCommunity,
   getAllUserCommu,
+  getFeedPopularUser,
 } = feedController;
 
 // Route :/feeds
 router.get('/allusers-communitys', getAllUserCommu);
 router.get('/userscommunity', getAllUserCommunity);
+router.get('/userpost', getFeedUserAll);
+router.get('/userhidepost', getFeedUserHide);
+router.get('/usersavepost', getFeedUserSave);
+router.get('/userpopularpost', getFeedPopularUser);
 module.exports = router;
