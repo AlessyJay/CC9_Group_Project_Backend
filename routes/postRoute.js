@@ -1,16 +1,15 @@
 const express = require('express');
 const router = express.Router();
 const postController = require('../controllers/postController');
-const {} = postController;
+const { uploadMultiple } = require('../controllers/uploadCloud');
+const { userCreatePost, userCreateImgPost } = postController;
 
 // Post
-router.post('/postmain');
+router.post('/createpost', uploadMultiple, userCreatePost);
 
 // Draft
 
-router.post('/postmainImg');
-
-router.post('/login');
+router.put('/login');
 router.post('/register');
 
 module.exports = router;

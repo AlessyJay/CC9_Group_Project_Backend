@@ -3,6 +3,9 @@ const multer = require('multer');
 const cloudinary = require('cloudinary').v2;
 
 exports.uploadPromise = util.promisify(cloudinary.uploader.upload);
+exports.uploadVideoPromise = util.promisify(cloudinary.uploader.upload, {
+  resource_type: 'video',
+});
 
 const upload = multer({
   storage: multer.diskStorage({
@@ -17,13 +20,17 @@ const upload = multer({
     if (
       file.mimetype === 'image/png' ||
       file.mimetype === 'image/jpg' ||
-      file.mimetype === 'image/jpeg'
+      file.mimetype === 'image/jpeg' ||
+      file.mimetype === 'video/mp4' ||
+      file.mimetype === 'video/mov'
     ) {
       cb(null, true);
     } else {
       cb(null, false);
       return cb(
-        new CustomError('Only .png, .jpg and .jpeg format allowed!'),
+        new CustomError(
+          'Only .png, .jpg ,.jpeg ,.mp4 and .mov format allowed!'
+        ),
         400
       );
     }

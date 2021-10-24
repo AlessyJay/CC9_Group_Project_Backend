@@ -3,8 +3,7 @@ const router = express.Router();
 const userController = require('../controllers/userController');
 const {
   uploadMultiple,
-  uploadSingle,
-  uploadBanner,
+  uploadBranner,
   uploadProfileImg,
 } = require('../controllers/uploadCloud');
 const {
@@ -24,10 +23,10 @@ router.post('/facebookauth', userLoginFacebook);
 router.post('/login', userLoginform);
 router.post('/register', userRegisterform);
 router.post('/verifyuser', verifyUserforReset);
-router.post('/resetpassword/:id', resetpassword);
+router.put('/resetpassword/:id', resetpassword);
 
 router.put('/updateProfile', uploadProfileImg, updateProfileImg);
-router.put('/updateBanner', uploadBanner, updateBannerImg);
+router.put('/updateBanner', uploadBranner, updateBannerImg);
 router.put('/updateUserProfile', uploadMultiple, updateProfile);
 // update username imgprofile branner firstname lastname
 // change password

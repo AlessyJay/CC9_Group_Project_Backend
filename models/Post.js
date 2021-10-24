@@ -23,6 +23,14 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         defaultValue: true,
       },
+      imageUrl: {
+        type: DataTypes.TEXT,
+        allowNull: true,
+      },
+      videoUrl: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
       status: {
         type: DataTypes.BOOLEAN,
         allowNull: false,

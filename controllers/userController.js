@@ -249,7 +249,7 @@ exports.updateProfile = async (req, res, next) => {
 };
 exports.updateProfileImg = async (req, res, next) => {
   try {
-    const { id } = req.user;
+    // const { id } = req.user;
     const { firstname, lastname, username, description } = req.body;
     console.log(req.file);
     if (req.file) {
@@ -284,7 +284,7 @@ exports.updateProfileImg = async (req, res, next) => {
 };
 exports.updateBannerImg = async (req, res, next) => {
   try {
-    const { id } = req.user;
+    // const { id } = req.user;
     const { firstname, lastname, username, description } = req.body;
     console.log(req.file);
     if (req.file) {

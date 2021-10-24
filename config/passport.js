@@ -16,7 +16,7 @@ const jwtStrategy = new JwtStrategy(options, async (payload, done) => {
   try {
     const user = await User.findOne({ where: { id: payload.id } });
     if (!user) return done(null, false);
-    done(null, payload);
+    done(null, user);
   } catch (err) {
     done(err, false);
   }
