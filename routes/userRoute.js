@@ -23,12 +23,12 @@ router.post('/googleauth', userLoginGoogle);
 router.post('/facebookauth', userLoginFacebook);
 router.post('/login', userLoginform);
 router.post('/register', userRegisterform);
-router.post('/verififyuser', verifyUserforReset);
+router.post('/verifyuser', verifyUserforReset);
 router.post('/resetpassword/:id', resetpassword);
 
-router.post('/updateProfile', uploadProfileImg, updateProfileImg);
-router.post('/updateBanner', uploadBanner, updateBannerImg);
-router.post('/updateUserProfile', uploadMultiple, updateProfile);
+router.put('/updateProfile', uploadProfileImg, updateProfileImg);
+router.put('/updateBanner', uploadBanner, updateBannerImg);
+router.put('/updateUserProfile', uploadMultiple, updateProfile);
 // update username imgprofile branner firstname lastname
 // change password
 module.exports = router;

@@ -31,5 +31,5 @@ const upload = multer({
 });
 exports.uploadSingle = upload.single('cloudimage');
 exports.uploadProfileImg = upload.single('profileimage');
-exports.uploadBanner = upload.single('bannerimage');
+exports.uploadBranner = upload.single('bannerimage');
 exports.uploadMultiple = upload.array('cloudimage');
