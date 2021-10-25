@@ -3,9 +3,6 @@ const multer = require('multer');
 const cloudinary = require('cloudinary').v2;
 
 exports.uploadPromise = util.promisify(cloudinary.uploader.upload);
-exports.uploadVideoPromise = util.promisify(cloudinary.uploader.upload, {
-  resource_type: 'video',
-});
 
 const upload = multer({
   storage: multer.diskStorage({

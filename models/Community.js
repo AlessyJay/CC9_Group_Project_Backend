@@ -10,7 +10,7 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: true,
       },
-      banerUrl: {
+      bannerUrl: {
         type: DataTypes.STRING,
         allowNull: true,
       },

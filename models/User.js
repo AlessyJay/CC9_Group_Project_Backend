@@ -109,6 +109,15 @@ module.exports = (sequelize, DataTypes) => {
       onDelete: 'RESTRICT',
       onUpdate: 'RESTRICT',
     });
+    User.hasMany(models.Notification, {
+      as: 'UserIdToNoti',
+      foreignKey: {
+        name: 'userIdToNoti',
+        allowNull: false,
+      },
+      onDelete: 'RESTRICT',
+      onUpdate: 'RESTRICT',
+    });
   };
   return User;
 };

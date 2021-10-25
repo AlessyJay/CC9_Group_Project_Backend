@@ -27,6 +27,16 @@ module.exports = (sequelize, DataTypes) => {
       onUpdate: 'RESTRICT',
     });
 
+    Notification.belongsTo(models.User, {
+      as: 'UserIdToNoti',
+      foreignKey: {
+        name: 'userIdToNoti',
+        allowNull: false,
+      },
+      onDelete: 'RESTRICT',
+      onUpdate: 'RESTRICT',
+    });
+
     Notification.belongsTo(models.Post, {
       foreignKey: {
         name: 'postId',

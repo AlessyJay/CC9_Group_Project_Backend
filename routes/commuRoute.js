@@ -1,11 +1,28 @@
 const express = require('express');
 const router = express.Router();
-const userController = require('../controllers/userController');
-const {} = userController;
+const commuController = require('../controllers/commuController');
+const {
+  createCommunity,
+  updateRuleCommunity,
+  deleteRuleCommunity,
+  updateCommunity,
+  ruleCommunity,
+  getPostPending,
+  approvePostRequest,
+} = commuController;
+const {
+  uploadMultiple,
+  uploadProfileImg,
+  uploadBranner,
+} = require('../controllers/uploadCloud');
+// route : /communities
 
-// router.post('/google', userLoginGoogle);
-// router.post('/facebook', userLoginFacebook);
-// router.post('/login', userLoginform);
-// router.post('/register', userRegisterform);
-
+router.post('/', createCommunity);
+router.put('/:communityId', uploadProfileImg, updateCommunity);
+router.put('/:communityId', uploadBranner, updateCommunity);
+router.post('/rules/:communityId', ruleCommunity);
+router.put('/rules/:ruleId', updateRuleCommunity);
+router.get('/admin/:communityId', getPostPending);
+router.put('/admin-prove/:postId', approvePostRequest);
+router.delete('/:ruleId', deleteRuleCommunity);
 module.exports = router;

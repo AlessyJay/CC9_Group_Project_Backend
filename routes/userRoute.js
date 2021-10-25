@@ -27,7 +27,8 @@ router.put('/resetpassword/:id', resetpassword);
 
 router.put('/updateProfile', uploadProfileImg, updateProfileImg);
 router.put('/updateBanner', uploadBranner, updateBannerImg);
-router.put('/updateUserProfile', uploadMultiple, updateProfile);
+
+// router.put('/updateUserProfile', uploadMultiple, updateProfile);
 // update username imgprofile branner firstname lastname
 // change password
 module.exports = router;
