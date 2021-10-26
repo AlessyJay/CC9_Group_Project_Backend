@@ -36,7 +36,7 @@ router.put(
 );
 router.put('/updateBanner', authenticateUser, uploadBranner, updateBannerImg);
 
-// router.put('/updateUserProfile', uploadMultiple, updateProfile);
+router.put('/updateUserProfile', authenticateUser, updateProfile);
 // update username imgprofile branner firstname lastname
 // change password
 module.exports = router;
