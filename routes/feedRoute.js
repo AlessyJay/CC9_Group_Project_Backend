@@ -3,18 +3,20 @@ const router = express.Router();
 const feedController = require('../controllers/feedController');
 
 const {
-  getFeedUserAll,
+  getFeedUserOverviewTab,
   getFeedUserHide,
   getFeedUserSave,
   getAllUserCommunity,
   getAllUserCommu,
   getFeedPopularUser,
+  getFeedUserPostTab,
 } = feedController;
 
 // Route :/feeds
 router.get('/allusers-communitys', getAllUserCommu);
 router.get('/userscommunity', getAllUserCommunity);
-router.get('/userpost', getFeedUserAll);
+router.get('/useroverview', getFeedUserOverviewTab);
+router.get('/userposts', getFeedUserPostTab);
 router.get('/userhidepost', getFeedUserHide);
 router.get('/usersavepost', getFeedUserSave);
 router.get('/userpopularpost', getFeedPopularUser);

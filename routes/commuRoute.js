@@ -9,14 +9,21 @@ const {
   ruleCommunity,
   getPostPending,
   approvePostRequest,
+  getCommunityPostInCommunity,
+  getPopularPostInCommunity,
+  getNewPostInCommunity,
 } = commuController;
 const {
   uploadMultiple,
   uploadProfileImg,
   uploadBranner,
 } = require('../controllers/uploadCloud');
+
 // route : /communities
 
+router.get('/posts/:communityId', getCommunityPostInCommunity);
+router.get('/populars/:communityId', getPopularPostInCommunity);
+router.get('/news/:communityId', getNewPostInCommunity);
 router.post('/', createCommunity);
 router.put('/:communityId', uploadProfileImg, updateCommunity);
 router.put('/:communityId', uploadBranner, updateCommunity);

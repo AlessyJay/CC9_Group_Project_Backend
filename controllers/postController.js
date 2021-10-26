@@ -54,7 +54,7 @@ exports.userCreatePost = async (req, res, next) => {
         videoUrl: urls[0].secure_url,
         status,
         communityId: communityId ?? null,
-        userId: 3,
+        userId: 2,
         // userId: id,
       };
       const post = await Post.create(postObj);
@@ -78,7 +78,7 @@ exports.userCreatePost = async (req, res, next) => {
         imageUrl: JSON.stringify(arrPath),
         status,
         communityId: communityId ?? null,
-        userId: 3,
+        userId: 2,
         // userId: id,
       };
       const post = await Post.create(postObj);
@@ -94,7 +94,7 @@ exports.userCreatePost = async (req, res, next) => {
         allow_notification: notification,
         status,
         communityId: communityId ?? null,
-        userId: 3,
+        userId: 2,
         // userId:id,
       };
       const post = await Post.create(postObj);

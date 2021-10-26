@@ -1,9 +1,64 @@
 const { uploadPromise } = require('./uploadCloud');
 const fs = require('fs');
-const { Community, Rule, Post } = require('../models');
+const { Community, Rule, Post, Comment } = require('../models');
 
-exports.getCommunityPostFeed = async (req, res, next) => {};
+//ข้อมูลสำหรับแสดงในหน้า feed ของ community
+exports.getCommunityPostInCommunity = async (req, res, next) => {
+  try {
+    const { communityId } = req.params;
+    const postList = await Post.findAll({
+      where: { communityId, status: true },
+      include: { model: Comment },
+    });
+    const newfeedLists = feedLists.map((item) => {
+      if (!item.imageUrl) {
+        return item;
+      } else return { ...item.toJSON(), imageUrl: JSON.parse(item.imageUrl) };
+    });
+    res.status(200).json({ postList: newfeedLists });
+  } catch (err) {
+    next(err);
+  }
+};
 
+// ข้อมูลสำหรับแสดงหน้า Feed Tab Popular
+exports.getPopularPostInCommunity = async (req, res, next) => {
+  try {
+    const { communityId } = req.params;
+    const postList = await Post.findAll({
+      where: { communityId, status: true },
+      include: { model: Comment },
+      order: [['like', 'DESC']],
+    });
+    const newfeedLists = feedLists.map((item) => {
+      if (!item.imageUrl) {
+        return item;
+      } else return { ...item.toJSON(), imageUrl: JSON.parse(item.imageUrl) };
+    });
+    res.status(200).json({ postList: newfeedLists });
+  } catch (err) {
+    next(err);
+  }
+};
+// ข้อมูลสำหรับแสดงหน้า feed tab New
+exports.getNewPostInCommunity = async (req, res, next) => {
+  try {
+    const { communityId } = req.params;
+    const postList = await Post.findAll({
+      where: { communityId, status: true },
+      order: [['createdAt', 'DESC']],
+      include: { model: Comment },
+    });
+    const newfeedLists = feedLists.map((item) => {
+      if (!item.imageUrl) {
+        return item;
+      } else return { ...item.toJSON(), imageUrl: JSON.parse(item.imageUrl) };
+    });
+    res.status(200).json({ postList: newfeedLists });
+  } catch (err) {
+    next(err);
+  }
+};
 exports.createCommunity = async (req, res, next) => {
   try {
     // const { id } = req.user;
@@ -104,7 +159,12 @@ exports.getPostPending = async (req, res, next) => {
       where: { communityId, status: false },
       order: [['updatedAt', 'DESC']],
     });
-    res.status(200).json({ postLists });
+    const newfeedLists = feedLists.map((item) => {
+      if (!item.imageUrl) {
+        return item;
+      } else return { ...item.toJSON(), imageUrl: JSON.parse(item.imageUrl) };
+    });
+    res.status(200).json({ postList: newfeedLists });
   } catch (err) {
     next(err);
   }
