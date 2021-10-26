@@ -18,13 +18,14 @@ const {
   uploadProfileImg,
   uploadBranner,
 } = require('../controllers/uploadCloud');
-
+const passport = require('passport');
+const authenticateUser = passport.authenticate('jwt', { session: false });
 // route : /communities
 
 router.get('/posts/:communityId', getCommunityPostInCommunity);
 router.get('/populars/:communityId', getPopularPostInCommunity);
 router.get('/news/:communityId', getNewPostInCommunity);
-router.post('/', createCommunity);
+router.post('/', authenticateUser, createCommunity);
 router.put('/:communityId', uploadProfileImg, updateCommunity);
 router.put('/:communityId', uploadBranner, updateCommunity);
 router.post('/rules/:communityId', ruleCommunity);

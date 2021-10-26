@@ -242,7 +242,7 @@ exports.updateBannerImg = async (req, res, next) => {
 exports.updateProfile = async (req, res, next) => {
   try {
     const { id } = req.user;
-    const { firstname, lastname, username, description } = req.body;
+    const { username, description } = req.body;
     // check username in system
 
     const checkUsername = await User.findOne({ where: username });
@@ -250,8 +250,6 @@ exports.updateProfile = async (req, res, next) => {
       return res.status(400).json({ message: 'Username already used' });
     const rows = await User.update(
       {
-        firstName: firstname,
-        lastName: lastname,
         username,
         description,
       },

@@ -11,10 +11,11 @@ const {
   getFeedPopularUser,
   getFeedUserPostTab,
 } = feedController;
-
+const passport = require('passport');
+const authenticateUser = passport.authenticate('jwt', { session: false });
 // Route :/feeds
 router.get('/allusers-communitys', getAllUserCommu);
-router.get('/userscommunity', getAllJoinedCommunity);
+router.get('/usercommunitys', authenticateUser, getAllJoinedCommunity);
 router.get('/useroverview', getFeedUserOverviewTab);
 router.get('/userposts', getFeedUserPostTab);
 router.get('/userhidepost', getFeedUserHide);

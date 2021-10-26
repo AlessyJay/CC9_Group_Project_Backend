@@ -1,6 +1,6 @@
 const { uploadPromise } = require('./uploadCloud');
 const fs = require('fs');
-const { Community, Rule, Post, Comment } = require('../models');
+const { Community, Rule, Post, Comment, Member } = require('../models');
 
 //ข้อมูลสำหรับแสดงในหน้า feed ของ community
 exports.getCommunityPostInCommunity = async (req, res, next) => {
