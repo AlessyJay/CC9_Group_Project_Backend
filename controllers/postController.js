@@ -14,8 +14,8 @@ exports.getPostbyId = async (req, res, next) => {
   try {
     const { id } = req.params;
     const post = await Post.findOne({
-      where: { id },
-      include: { model: Comment, where: { postId: id, isDeleted: false } },
+      where: { id, isDeleted: false },
+      include: { model: Comment, where: { postId: id } },
     });
     if (!post) return res.status(400).json({ message: "Id doesn't match" });
     res.status(200).json({ post });
@@ -35,7 +35,7 @@ exports.userCreatePost = async (req, res, next) => {
       (req.files[0].path.includes('.mp4') ||
         req.files[0].path.includes('.mov4'))
     ) {
-      console.log(req.files);
+      // console.log(req.files);
       const urls = [];
       for (const file of req.files) {
         const { path } = file;
@@ -197,7 +197,7 @@ exports.userEditPost = async (req, res, next) => {
 // createdraft post
 exports.createDraftPost = async (req, res, next) => {
   try {
-    // const { id } = req.user;
+    const { id } = req.user;
     const { title, descriptions, type, notification, communityId, status } =
       req.body;
     if (
@@ -205,11 +205,11 @@ exports.createDraftPost = async (req, res, next) => {
       (req.files[0].path.includes('.mp4') ||
         req.files[0].path.includes('.mov4'))
     ) {
-      console.log(req.files);
+      // console.log(req.files);
       const urls = [];
       for (const file of req.files) {
         const { path } = file;
-        const result = await uploadVideoPromise(path);
+        const result = await uploadPromise(path, { resource_type: 'video' });
         urls.push(result);
         fs.unlinkSync(path);
       }
@@ -222,8 +222,7 @@ exports.createDraftPost = async (req, res, next) => {
         videoUrl: urls[0].secure_url,
         status,
         communityId: communityId ?? null,
-        userId: 3,
-        // userId: id,
+        userId: id,
       };
       const post = await Draft.create(postObj);
       res.json({ post });
@@ -246,8 +245,7 @@ exports.createDraftPost = async (req, res, next) => {
         imageUrl: JSON.stringify(arrPath),
         status,
         communityId: communityId ?? null,
-        userId: 3,
-        // userId: id,
+        userId: id,
       };
       const post = await Draft.create(postObj);
       res.json({
@@ -262,8 +260,7 @@ exports.createDraftPost = async (req, res, next) => {
         allow_notification: notification,
         status,
         communityId: communityId ?? null,
-        userId: 3,
-        // userId:id,
+        userId: id,
       };
       const post = await Draft.create(postObj);
       res.json({ post });
@@ -446,7 +443,10 @@ exports.userLikePost = async (req, res, next) => {
   try {
     const { id } = req.user;
     const { postId } = req.params;
-    const { isLiked } = req.body;
+    const { isLiked, userIdToNoti, like } = req.body;
+    // เพิ่ม - ลด จำนวน like
+    const postLike = await Post.findOne({ where: { postId } });
+    await Post.update({ like: +postLike + +like }, { where: { postId } });
     // check userinteraction
     const userHaveData = await UserInterAction.findOne({
       where: { userId: id, postId },
@@ -460,12 +460,13 @@ exports.userLikePost = async (req, res, next) => {
         },
         { where: { userId: id, postId } }
       );
-      const noti = await Notification.create({
-        type: 'LIKE',
-        isSeen: false,
-        postId,
-        userId: id,
-      });
+      // const noti = await Notification.create({
+      //   type: 'LIKE',
+      //   isSeen: false,
+      //   postId,
+      //   userId: id,
+      //   userIdToNoti,
+      // });
       res.status(201).json({ message: 'Liked action' });
     } else {
       const res = await UserInterAction.create({

@@ -2,10 +2,6 @@ module.exports = (sequelize, DataTypes) => {
   const Notification = sequelize.define(
     'Notification',
     {
-      notificationType: {
-        type: DataTypes.ENUM('LIKE', 'COMMENT'),
-        allowNull: false,
-      },
       isSeen: {
         type: DataTypes.BOOLEAN,
         allowNull: false,

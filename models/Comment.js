@@ -6,11 +6,6 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.TEXT,
         allowNull: false,
       },
-      reportCount: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        defaulValue: 0,
-      },
       like: {
         type: DataTypes.INTEGER,
         allowNull: false,

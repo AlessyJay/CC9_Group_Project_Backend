@@ -5,6 +5,7 @@ const cors = require('cors');
 const userRoute = require('./routes/userRoute');
 const feedRoute = require('./routes/feedRoute');
 const commuRoute = require('./routes/commuRoute');
+const commentRoute = require('./routes/commentRoute');
 const postRoute = require('./routes/postRoute');
 const errorController = require('./controllers/errorController');
 const passport = require('passport');
@@ -24,6 +25,7 @@ app.use(passport.initialize());
 app.use('/users', userRoute);
 app.use('/feeds', feedRoute);
 app.use('/communities', commuRoute);
+app.use('/comments', commentRoute);
 app.use('/posts', postRoute);
 //Page not found 404
 app.use((req, res, next) => {

@@ -2,7 +2,6 @@ const express = require('express');
 const router = express.Router();
 const userController = require('../controllers/userController');
 const {
-  uploadMultiple,
   uploadBranner,
   uploadProfileImg,
 } = require('../controllers/uploadCloud');
@@ -35,7 +34,6 @@ router.put(
   updateProfileImg
 );
 router.put('/updateBanner', authenticateUser, uploadBranner, updateBannerImg);
-
 router.put('/updateUserProfile', authenticateUser, updateProfile);
 // update username imgprofile branner firstname lastname
 // change password

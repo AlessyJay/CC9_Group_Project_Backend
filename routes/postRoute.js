@@ -1,10 +1,15 @@
 const express = require('express');
 const router = express.Router();
 const postController = require('../controllers/postController');
+const passport = require('passport');
+const authenticateUser = passport.authenticate('jwt', { session: false });
 const {
   uploadMultiple,
   uploadProfileImg,
 } = require('../controllers/uploadCloud');
+
+// uploadmultiple => cloudimage
+
 const {
   userCreatePost,
   deletepost,
@@ -19,17 +24,22 @@ const {
 } = postController;
 
 // Post
-router.get('/:id', getPostbyId);
-router.post('/createpost', uploadMultiple, userCreatePost);
-router.post('/savepost/:id', userSavePost);
-router.post('/hidepost/:id', userHidePost);
-router.post('/likepost/:id', userLikePost);
-router.put('/:postId', uploadMultiple, userEditPost);
-router.delete('/:id', deletepost);
+router.get('/:id', authenticateUser, getPostbyId);
+router.post('/createpost', authenticateUser, uploadMultiple, userCreatePost);
+router.post('/savepost/:id', authenticateUser, userSavePost);
+router.post('/hidepost/:id', authenticateUser, userHidePost);
+router.post('/likepost/:id', authenticateUser, userLikePost);
+router.put('/:postId', authenticateUser, uploadMultiple, userEditPost);
+router.delete('/:id', authenticateUser, deletepost);
 // Draft
-router.get('/drafts', getDraftPost);
-router.post('/drafts/createdraft', uploadMultiple, createDraftPost);
-router.put('/drafts/:postId', uploadMultiple, userEditPost);
-router.delete('/drafts/:id', deleteDraft);
+router.get('/drafts', authenticateUser, getDraftPost);
+router.post(
+  '/drafts/createdraft',
+  authenticateUser,
+  uploadMultiple,
+  createDraftPost
+);
+router.put('/drafts/:postId', authenticateUser, uploadMultiple, userEditPost);
+router.delete('/drafts/:id', authenticateUser, deleteDraft);
 
 module.exports = router;
