@@ -28,7 +28,10 @@ exports.editComment = async (req, res, next) => {
     const { id } = req.user;
     const { commentId } = req.params;
     const { commentDetails } = req.body;
-    await Comment.update({ commentDetails }, { where: { id: commentId } });
+    await Comment.update(
+      { commentDetails },
+      { where: { id: commentId, userId: id } }
+    );
   } catch (err) {
     next(err);
   }

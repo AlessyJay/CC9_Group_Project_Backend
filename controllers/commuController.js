@@ -61,10 +61,15 @@ exports.getNewPostInCommunity = async (req, res, next) => {
 };
 exports.createCommunity = async (req, res, next) => {
   try {
-    // const { id } = req.user;
+    const { id } = req.user;
     const { type, name } = req.body;
     const community = await Community.create({ type, name, userId: id });
-    res.status(200).json({ community });
+    const member = await Member.create({
+      role: 'ADMIN',
+      communityId: community.id,
+      userId: id,
+    });
+    res.status(200).json({ community, member });
   } catch (err) {
     next(err);
   }
@@ -175,6 +180,28 @@ exports.approvePostRequest = async (req, res, next) => {
     const { postId } = req.params;
     await Post.update({ status: true }, { where: { postId } });
     res.status(201).json({ message: 'Post has been approved' });
+  } catch (err) {
+    next(err);
+  }
+};
+
+exports.joinCommunity = async (req, res, next) => {
+  try {
+    const { id } = req.user;
+    const { communityId } = req.params;
+    await Member.create({ role: 'MEMBER', userId: id, communityId });
+  } catch (err) {
+    next(err);
+  }
+};
+
+exports.leaveCommunity = async (req, res, next) => {
+  try {
+    const { id } = req.user;
+    const { communityId } = req.params;
+    await Member.destroy({
+      where: { userId: id, communityId, role: 'MEMBER' },
+    });
   } catch (err) {
     next(err);
   }

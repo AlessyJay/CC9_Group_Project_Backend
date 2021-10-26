@@ -26,8 +26,8 @@ exports.userLoginGoogle = async (req, res, next) => {
         lastName: user.lastName,
         email: user.email,
         username: user.username,
-        profileUrl: user.profile_url,
-        bannerUrl: user.banner_url,
+        profileUrl: user.profileUrl,
+        bannerUrl: user.bannerUrl,
         description: user.description,
       };
       const token = jwt.sign(payload, 'GroupProjectRedditClone', {
@@ -41,8 +41,8 @@ exports.userLoginGoogle = async (req, res, next) => {
         lastName: findUser.lastName,
         email: findUser.email,
         username: findUser.username,
-        profileUrl: findUser.profile_url,
-        bannerUrl: findUser.banner_url,
+        profileUrl: findUser.profileUrl,
+        bannerUrl: findUser.bannerUrl,
         description: findUser.description,
       };
       const token = jwt.sign(payload, 'GroupProjectRedditClone', {
@@ -76,13 +76,14 @@ exports.userLoginFacebook = async (req, res, next) => {
         lastName: user.lastName,
         email: user.email,
         username: user.username,
-        profileUrl: user.profile_url,
-        bannerUrl: user.banner_url,
+        profileUrl: user.profileUrl,
+        bannerUrl: user.bannerUrl,
         description: user.description,
       };
       const token = jwt.sign(payload, 'GroupProjectRedditClone', {
         expiresIn: 60 * 60 * 24 * 30,
       });
+      console.log(token);
       res.status(200).json({ message: 'Success logged in', token });
     } else {
       const payload = {
@@ -91,13 +92,14 @@ exports.userLoginFacebook = async (req, res, next) => {
         lastName: findUser.lastName,
         email: findUser.email,
         username: findUser.username,
-        profileUrl: findUser.profile_url,
-        bannerUrl: findUser.banner_url,
+        profileUrl: findUser.profileUrl,
+        bannerUrl: findUser.bannerUrl,
         description: findUser.description,
       };
       const token = jwt.sign(payload, 'GroupProjectRedditClone', {
         expiresIn: 60 * 60 * 24 * 30,
       });
+      console.log(token);
       res.status(200).json({ message: 'Success logged in', token });
     }
   } catch (err) {

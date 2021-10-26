@@ -1,6 +1,6 @@
 const { Community, User, Member, UserInteraction, Post } = require('../models');
 
-// สำหรับดึงข้อมูล Comminity ของ user
+// สำหรับดึงข้อมูล Comminity และ user
 exports.getAllUserCommu = async (req, res, next) => {
   try {
     const user = await User.findAll({
@@ -25,12 +25,12 @@ exports.getAllUserCommu = async (req, res, next) => {
     next(err);
   }
 };
-// สำหรับดึงรายชื่อ user และ community ทั้งหมดในระบบ
-exports.getAllUserCommunity = async (req, res, next) => {
+// สำหรับ community ทั้งหมดในระบบ ของ user นั้นๆ
+exports.getAllJoinedCommunity = async (req, res, next) => {
   try {
-    // const { id } = req.user;
+    const { id } = req.user;
     const communityLists = await Member.findAll({
-      where: { userId: 2 },
+      where: { userId: id },
       attributes: { exclude: ['createdAt', 'updatedAt'] },
       include: [
         {

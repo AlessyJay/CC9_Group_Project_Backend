@@ -6,7 +6,7 @@ const {
   getFeedUserOverviewTab,
   getFeedUserHide,
   getFeedUserSave,
-  getAllUserCommunity,
+  getAllJoinedCommunity,
   getAllUserCommu,
   getFeedPopularUser,
   getFeedUserPostTab,
@@ -14,7 +14,7 @@ const {
 
 // Route :/feeds
 router.get('/allusers-communitys', getAllUserCommu);
-router.get('/userscommunity', getAllUserCommunity);
+router.get('/userscommunity', getAllJoinedCommunity);
 router.get('/useroverview', getFeedUserOverviewTab);
 router.get('/userposts', getFeedUserPostTab);
 router.get('/userhidepost', getFeedUserHide);
