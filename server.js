@@ -7,6 +7,8 @@ const feedRoute = require('./routes/feedRoute');
 const commuRoute = require('./routes/commuRoute');
 const postRoute = require('./routes/postRoute');
 const errorController = require('./controllers/errorController');
+const passport = require('passport');
+require('./config/passport');
 // const { sequelize } = require('./models');
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
@@ -18,6 +20,7 @@ app.use(cors());
 // sequelize.sync({});
 //////////////////////////////////////////
 
+app.use(passport.initialize());
 app.use('/users', userRoute);
 app.use('/feeds', feedRoute);
 app.use('/communities', commuRoute);

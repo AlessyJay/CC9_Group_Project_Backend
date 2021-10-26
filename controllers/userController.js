@@ -205,34 +205,42 @@ exports.resetpassword = async (req, res, next) => {
 exports.updateProfileImg = async (req, res, next) => {
   try {
     // const { id } = req.user;
-    const { firstname, lastname, username, description } = req.body;
-    console.log(req.file);
-    if (req.file) {
-      const result = await uploadPromise(req.file.path);
-      fs.unlinkSync(req.file.path);
-      const rows = await User.update(
-        {
-          firstName: firstname,
-          lastName: lastname,
-          username,
-          description,
-          profileUrl: result.secure_url,
-        },
-        { where: { id } }
-      );
-      if (!rows) return res.status(400).json({ message: 'Id does not match' });
-    } else {
-      const rows = await User.update(
-        {
-          firstName: firstname,
-          lastName: lastname,
-          username,
-          description,
-        },
-        { where: { id } }
-      );
-      if (!rows) return res.status(400).json({ message: 'Id does not match' });
-    }
+    // const { firstname, lastname, username, description } = req.body;
+    // console.log(req.file);
+    // if (req.file) {
+    //   const result = await uploadPromise(req.file.path);
+    //   fs.unlinkSync(req.file.path);
+    //   const rows = await User.update(
+    //     {
+    //       profileUrl: result.secure_url,
+    //     },
+    //     { where: { id } }
+    //   );
+    //   if (!rows) return res.status(400).json({ message: 'Id does not match' });
+    // } else {
+    //   const rows = await User.update(
+    //     {
+    //       firstName: firstname,
+    //       lastName: lastname,
+    //       username,
+    //       description,
+    //     },
+    //     { where: { id } }
+    //   );
+    //   if (!rows) return res.status(400).json({ message: 'Id does not match' });
+    // }
+    const { id } = req.user;
+    
+    const result = await uploadPromise(req.file.path);
+    fs.unlinkSync(req.file.path);
+    const rows = await User.update(
+      {
+        profileUrl: result.secure_url,
+      },
+      { where: { id } }
+    );
+    if (!rows) return res.status(400).json({ message: 'Id does not match' });
+    res.status(201).json({ message: 'Update profile success' });
   } catch (err) {
     next(err);
   }
@@ -240,34 +248,45 @@ exports.updateProfileImg = async (req, res, next) => {
 exports.updateBannerImg = async (req, res, next) => {
   try {
     // const { id } = req.user;
-    const { firstname, lastname, username, description } = req.body;
-    console.log(req.file);
-    if (req.file) {
-      const result = await uploadPromise(req.file.path);
-      fs.unlinkSync(req.file.path);
-      const rows = await User.update(
-        {
-          firstName: firstname,
-          lastName: lastname,
-          username,
-          description,
-          bannerUrl: result.secure_url,
-        },
-        { where: { id } }
-      );
-      if (!rows) return res.status(400).json({ message: 'Id does not match' });
-    } else {
-      const rows = await User.update(
-        {
-          firstName: firstname,
-          lastName: lastname,
-          username,
-          description,
-        },
-        { where: { id } }
-      );
-      if (!rows) return res.status(400).json({ message: 'Id does not match' });
-    }
+    // const { firstname, lastname, username, description } = req.body;
+    // console.log(req.file);
+    // if (req.file) {
+    //   const result = await uploadPromise(req.file.path);
+    //   fs.unlinkSync(req.file.path);
+    //   const rows = await User.update(
+    //     {
+    //       firstName: firstname,
+    //       lastName: lastname,
+    //       username,
+    //       description,
+    //       bannerUrl: result.secure_url,
+    //     },
+    //     { where: { id } }
+    //   );
+    //   if (!rows) return res.status(400).json({ message: 'Id does not match' });
+    // } else {
+    //   const rows = await User.update(
+    //     {
+    //       firstName: firstname,
+    //       lastName: lastname,
+    //       username,
+    //       description,
+    //     },
+    //     { where: { id } }
+    //   );
+    //   if (!rows) return res.status(400).json({ message: 'Id does not match' });
+    // }
+    const { id } = req.user;
+    const result = await uploadPromise(req.file.path);
+    fs.unlinkSync(req.file.path);
+    const rows = await User.update(
+      {
+        bannerUrl: result.secure_url,
+      },
+      { where: { id } }
+    );
+    if (!rows) return res.status(400).json({ message: 'Id does not match' });
+    res.status(201).json({ message: 'Update banner success' });
   } catch (err) {
     next(err);
   }

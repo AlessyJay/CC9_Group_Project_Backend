@@ -18,6 +18,9 @@ const {
   updateBannerImg,
 } = userController;
 
+const passport = require('passport');
+const authenticateUser = passport.authenticate('jwt', { session: false });
+
 router.post('/googleauth', userLoginGoogle);
 router.post('/facebookauth', userLoginFacebook);
 router.post('/login', userLoginform);
@@ -25,8 +28,13 @@ router.post('/register', userRegisterform);
 router.post('/verifyuser', verifyUserforReset);
 router.put('/resetpassword/:id', resetpassword);
 
-router.put('/updateProfile', uploadProfileImg, updateProfileImg);
-router.put('/updateBanner', uploadBranner, updateBannerImg);
+router.put(
+  '/updateProfile',
+  authenticateUser,
+  uploadProfileImg,
+  updateProfileImg
+);
+router.put('/updateBanner', authenticateUser, uploadBranner, updateBannerImg);
 
 // router.put('/updateUserProfile', uploadMultiple, updateProfile);
 // update username imgprofile branner firstname lastname
