@@ -80,12 +80,12 @@ exports.createCommunity = async (req, res, next) => {
       communityId: community.id,
       userId: id,
     });
-    res.status(200).json({ community, member });
+    res.status(201).json({ community, member });
   } catch (err) {
     next(err);
   }
 };
-exports.updateCommunity = async (req, res, next) => {
+exports.updateprofileCommunity = async (req, res, next) => {
   try {
     const { communityId } = req.params;
     const { descriptions } = req.body;
@@ -102,7 +102,8 @@ exports.updateCommunity = async (req, res, next) => {
       if (!rows) return res.status(400).json({ message: 'Id does not match' });
       res.status(201).json({ message: 'Update Successfully' });
     } else {
-      await Community.update({ descriptions }, { where: { communityId } });
+      await Community.update({ descriptions }, { where: { id: communityId } });
+      res.status(201).json({ message: 'Update Successfully' });
     }
   } catch (err) {
     next(err);
@@ -125,20 +126,31 @@ exports.updateBannerCommunity = async (req, res, next) => {
       if (!rows) return res.status(400).json({ message: 'Id does not match' });
       res.status(201).json({ message: 'Update Successfully' });
     } else {
-      await Community.update({ descriptions }, { where: { communityId } });
+      await Community.update({ descriptions }, { where: { id: communityId } });
+      res.status(201).json({ message: 'Update Successfully' });
     }
   } catch (err) {
     next(err);
   }
 };
 
+//Get rule each communitys
+exports.getRuleCommunity = async (req, res, next) => {
+  try {
+    const { communityId } = req.params;
+    const rules = await Rule.findAll({ where: { communityId } });
+    res.status(200).json({ rules });
+  } catch (err) {
+    next(err);
+  }
+};
 //create rule
 exports.ruleCommunity = async (req, res, next) => {
   try {
     const { communityId } = req.params;
     const { rule } = req.body;
-    await Rule.create({ ruleDetail: rule, communityId });
-    res.status(200).json({ message: 'Create  Successfully' });
+    const result = await Rule.create({ ruleDetail: rule, communityId });
+    res.status(200).json({ message: 'Create  Successfully', rule: result });
   } catch (err) {
     next(err);
   }
@@ -195,17 +207,22 @@ exports.approvePostRequest = async (req, res, next) => {
     next(err);
   }
 };
-
+// Create member
 exports.joinCommunity = async (req, res, next) => {
   try {
     const { id } = req.user;
     const { communityId } = req.params;
-    await Member.create({ role: 'MEMBER', userId: id, communityId });
+    const result = await Member.create({
+      role: 'MEMBER',
+      userId: id,
+      communityId,
+    });
+    res.status(200).json({ member: result, message: 'Joined' });
   } catch (err) {
     next(err);
   }
 };
-
+// delete member
 exports.leaveCommunity = async (req, res, next) => {
   try {
     const { id } = req.user;
@@ -213,6 +230,7 @@ exports.leaveCommunity = async (req, res, next) => {
     await Member.destroy({
       where: { userId: id, communityId, role: 'MEMBER' },
     });
+    res.status(204).json({});
   } catch (err) {
     next(err);
   }

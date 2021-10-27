@@ -5,7 +5,7 @@ const {
   createCommunity,
   updateRuleCommunity,
   deleteRuleCommunity,
-  updateCommunity,
+  updateprofileCommunity,
   ruleCommunity,
   getPostPending,
   approvePostRequest,
@@ -13,6 +13,10 @@ const {
   getPopularPostInCommunity,
   getNewPostInCommunity,
   getCommunitybyId,
+  updateBannerCommunity,
+  getRuleCommunity,
+  joinCommunity,
+  leaveCommunity,
 } = commuController;
 const {
   uploadMultiple,
@@ -28,11 +32,14 @@ router.get('/posts/:communityId', getCommunityPostInCommunity);
 router.get('/populars/:communityId', getPopularPostInCommunity);
 router.get('/news/:communityId', getNewPostInCommunity);
 router.post('/', authenticateUser, createCommunity);
-router.put('/:communityId', uploadProfileImg, updateCommunity);
-router.put('/:communityId', uploadBranner, updateCommunity);
+router.put('/profile/:communityId', uploadProfileImg, updateprofileCommunity);
+router.put('/banner/:communityId', uploadBranner, updateBannerCommunity);
+router.get('/rules/:communityId', getRuleCommunity);
 router.post('/rules/:communityId', ruleCommunity);
 router.put('/rules/:ruleId', updateRuleCommunity);
+router.delete('/:ruleId', deleteRuleCommunity);
 router.get('/admin/:communityId', getPostPending);
 router.put('/admin-prove/:postId', approvePostRequest);
-router.delete('/:ruleId', deleteRuleCommunity);
+router.post('/member/:communityId', joinCommunity);
+router.delete('/member/:communityId', leaveCommunity);
 module.exports = router;

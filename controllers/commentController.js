@@ -1,9 +1,10 @@
 const { Comment, Notification } = require('../models');
 
+//create comment
 exports.createComment = async (req, res, next) => {
   try {
     const { id } = req.user; // คน comment
-    const { userToNoti, noticationType, postId, commentDetails } = req.body;
+    const { userToNoti, postId, commentDetails } = req.body;
     const comment = await Comment.create({
       commentDetails,
       like,
@@ -11,13 +12,13 @@ exports.createComment = async (req, res, next) => {
       postId,
     });
 
-    const noti = await Notification.create({
+    const notification = await Notification.create({
       userToNoti,
       postId,
       userId,
       isSeen: false,
     });
-    res.status(200).json({ comment, noti });
+    res.status(200).json({ comment, notification });
   } catch (err) {
     next(err);
   }
@@ -32,6 +33,7 @@ exports.editComment = async (req, res, next) => {
       { commentDetails },
       { where: { id: commentId, userId: id } }
     );
+    res.status(201).json({ message: 'Updated successfully' });
   } catch (err) {
     next(err);
   }
@@ -48,6 +50,7 @@ exports.deleteComment = async (req, res, next) => {
   }
 };
 
+// ยังไม่เรียบร้อย ถ้าจะเก็บอาจจะต้องสร้าง table เพิ่มเช็คว่า user like comment แล้วยัง
 exports.likeComment = async (req, res, next) => {
   try {
     const { commendId } = req.params;
