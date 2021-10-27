@@ -15,10 +15,17 @@ exports.getPostbyId = async (req, res, next) => {
     const { id } = req.params;
     const post = await Post.findOne({
       where: { id, isDeleted: false },
-      include: { model: Comment, where: { postId: id } },
     });
+
+    const comment = await Comment.findAll({ where: { postId: id } });
     if (!post) return res.status(400).json({ message: "Id doesn't match" });
-    res.status(200).json({ post });
+    res.status(200).json({
+      post: {
+        ...post.toJSON(),
+        imageUrl: JSON.parse(post.imageUrl),
+        comment,
+      },
+    });
   } catch (err) {
     next(err);
   }
@@ -28,20 +35,19 @@ exports.getPostbyId = async (req, res, next) => {
 exports.userCreatePost = async (req, res, next) => {
   try {
     // const { id } = req.user;
+
     const { title, descriptions, type, notification, communityId, status } =
       req.body;
+
     if (
       req.files &&
       (req.files[0].path.includes('.mp4') ||
         req.files[0].path.includes('.mov4'))
     ) {
-      // console.log(req.files);
       const urls = [];
       for (const file of req.files) {
         const { path } = file;
-        const result = await uploadPromise(path, {
-          resource_type: 'video',
-        });
+        const result = await uploadPromise(path, { resource_type: 'video' });
         urls.push(result);
         fs.unlinkSync(path);
       }
@@ -54,8 +60,7 @@ exports.userCreatePost = async (req, res, next) => {
         videoUrl: urls[0].secure_url,
         status,
         communityId: communityId ?? null,
-        userId: 2,
-        // userId: id,
+        userId: 1,
       };
       const post = await Post.create(postObj);
       res.json({ post });
@@ -78,8 +83,7 @@ exports.userCreatePost = async (req, res, next) => {
         imageUrl: JSON.stringify(arrPath),
         status,
         communityId: communityId ?? null,
-        userId: 2,
-        // userId: id,
+        userId: 1,
       };
       const post = await Post.create(postObj);
       res.json({
@@ -94,13 +98,13 @@ exports.userCreatePost = async (req, res, next) => {
         allow_notification: notification,
         status,
         communityId: communityId ?? null,
-        userId: 2,
-        // userId:id,
+        userId: 1,
       };
       const post = await Post.create(postObj);
       res.json({ post });
     }
   } catch (err) {
+    console.log(err);
     next(err);
   }
 };

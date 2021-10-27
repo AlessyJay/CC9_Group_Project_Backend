@@ -2,6 +2,17 @@ const { uploadPromise } = require('./uploadCloud');
 const fs = require('fs');
 const { Community, Rule, Post, Comment, Member } = require('../models');
 
+// get ข้อมูล community และ จำนวนคนใน community
+exports.getCommunitybyId = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const community = await Community.findOne({ where: { id } });
+    const amount = await Member.count({ where: { communityId: id } });
+    res.status(200).json({ community: { ...community, amount } });
+  } catch (err) {
+    next(err);
+  }
+};
 //ข้อมูลสำหรับแสดงในหน้า feed ของ community
 exports.getCommunityPostInCommunity = async (req, res, next) => {
   try {

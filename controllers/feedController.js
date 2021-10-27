@@ -45,6 +45,15 @@ exports.getAllJoinedCommunity = async (req, res, next) => {
   }
 };
 
+// สำหรับ ดึงข้อมูล community ทั้งหมด
+exports.getAllCommunity = async (req, res, next) => {
+  try {
+    const communityLists = await Community.findAll({});
+    res.status(200).json({ communityLists });
+  } catch (err) {
+    next(err);
+  }
+};
 // หน้า User Feed จะแสดงอันที่ post แล้วเท่านั้น
 exports.getFeedUserOverviewTab = async (req, res, next) => {
   try {
