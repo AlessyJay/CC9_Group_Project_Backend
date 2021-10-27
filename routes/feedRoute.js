@@ -13,13 +13,14 @@ const {
   getFeedPopularUser,
   getFeedUserPostTab,
   getAllCommunity,
+  getAllCommnutyPostMainPage,
 } = feedController;
 // Route :/feeds
 
 router.get('/allusers-communitys', getAllUserCommu);
-router.get('/allcommunity', getAllCommunity);
-
 router.get('/usercommunitys', authenticateUser, getAllJoinedCommunity);
+router.get('/allcommunity', getAllCommunity);
+router.get('/mainpage', getAllCommnutyPostMainPage);
 router.get('/useroverview', authenticateUser, getFeedUserOverviewTab);
 router.get('/userposts', authenticateUser, getFeedUserPostTab);
 router.get('/userhidepost', authenticateUser, getFeedUserHide);

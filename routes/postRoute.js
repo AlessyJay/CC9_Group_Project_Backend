@@ -28,8 +28,8 @@ router.get('/:id', getPostbyId);
 // router.post('/createpost', authenticateUser, uploadMultiple, userCreatePost);
 router.post('/createpost', uploadMultiple, userCreatePost);
 router.post('/savepost/:postId', authenticateUser, userSavePost);
-router.post('/hidepost/:id', authenticateUser, userHidePost);
-router.post('/likepost/:id', authenticateUser, userLikePost);
+router.post('/hidepost/:postId', authenticateUser, userHidePost);
+router.post('/likepost/:postId', authenticateUser, userLikePost);
 router.put('/:postId', authenticateUser, uploadMultiple, userEditPost);
 router.delete('/:id', authenticateUser, deletepost);
 // Draft

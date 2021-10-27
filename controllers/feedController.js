@@ -137,7 +137,21 @@ exports.getFeedUserSave = async (req, res, next) => {
 };
 
 // Main Feed see only content from community
-
+exports.getAllCommnutyPostMainPage = async (req, res, next) => {
+  try {
+    const postLists = await Post.findAll({
+      where: { communityId: { [Op.not]: null } },
+    });
+    const newfeedLists = postLists.map((item) => {
+      if (!item.imageUrl) {
+        return item;
+      } else return { ...item.toJSON(), imageUrl: JSON.parse(item.imageUrl) };
+    });
+    res.status(200).json({ feedLists: newfeedLists });
+  } catch (err) {
+    next(err);
+  }
+};
 //  User feed on overview tab (only ur post)
 exports.getFeedPopularMain = async (req, res, next) => {
   try {
@@ -145,7 +159,7 @@ exports.getFeedPopularMain = async (req, res, next) => {
       order: [['like', 'DESC']],
     });
 
-    const newfeedLists = feedLists.map((item) => {
+    const newfeedLists = postLists.map((item) => {
       if (!item.imageUrl) {
         return item;
       } else return { ...item.toJSON(), imageUrl: JSON.parse(item.imageUrl) };
@@ -163,7 +177,7 @@ exports.getFeedPopularUser = async (req, res, next) => {
       order: [['like', 'DESC']],
     });
 
-    const newfeedLists = feedLists.map((item) => {
+    const newfeedLists = postLists.map((item) => {
       if (!item.imageUrl) {
         return item;
       } else return { ...item.toJSON(), imageUrl: JSON.parse(item.imageUrl) };

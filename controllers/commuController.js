@@ -136,7 +136,7 @@ exports.updateBannerCommunity = async (req, res, next) => {
 exports.ruleCommunity = async (req, res, next) => {
   try {
     const { communityId } = req.params;
-    const { rule } = req.body; //expect Array
+    const { rule } = req.body;
     await Rule.create({ ruleDetail: rule, communityId });
     res.status(200).json({ message: 'Create  Successfully' });
   } catch (err) {
