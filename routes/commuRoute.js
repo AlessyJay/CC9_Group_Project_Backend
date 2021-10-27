@@ -12,6 +12,7 @@ const {
   getCommunityPostInCommunity,
   getPopularPostInCommunity,
   getNewPostInCommunity,
+  getCommunitybyId,
 } = commuController;
 const {
   uploadMultiple,
@@ -22,6 +23,7 @@ const passport = require('passport');
 const authenticateUser = passport.authenticate('jwt', { session: false });
 // route : /communities
 
+router.get('/:communityId', getCommunitybyId);
 router.get('/posts/:communityId', getCommunityPostInCommunity);
 router.get('/populars/:communityId', getPopularPostInCommunity);
 router.get('/news/:communityId', getNewPostInCommunity);

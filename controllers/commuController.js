@@ -5,10 +5,10 @@ const { Community, Rule, Post, Comment, Member } = require('../models');
 // get ข้อมูล community และ จำนวนคนใน community
 exports.getCommunitybyId = async (req, res, next) => {
   try {
-    const { id } = req.params;
-    const community = await Community.findOne({ where: { id } });
-    const amount = await Member.count({ where: { communityId: id } });
-    res.status(200).json({ community: { ...community, amount } });
+    const { communityId } = req.params;
+    const community = await Community.findOne({ where: { id: communityId } });
+    const amount = await Member.count({ where: { communityId } });
+    res.status(200).json({ community: { ...community.toJSON(), amount } });
   } catch (err) {
     next(err);
   }
@@ -21,7 +21,7 @@ exports.getCommunityPostInCommunity = async (req, res, next) => {
       where: { communityId, status: true },
       include: { model: Comment },
     });
-    const newfeedLists = feedLists.map((item) => {
+    const newfeedLists = postList.map((item) => {
       if (!item.imageUrl) {
         return item;
       } else return { ...item.toJSON(), imageUrl: JSON.parse(item.imageUrl) };
@@ -41,7 +41,7 @@ exports.getPopularPostInCommunity = async (req, res, next) => {
       include: { model: Comment },
       order: [['like', 'DESC']],
     });
-    const newfeedLists = feedLists.map((item) => {
+    const newfeedLists = postList.map((item) => {
       if (!item.imageUrl) {
         return item;
       } else return { ...item.toJSON(), imageUrl: JSON.parse(item.imageUrl) };
@@ -60,7 +60,7 @@ exports.getNewPostInCommunity = async (req, res, next) => {
       order: [['createdAt', 'DESC']],
       include: { model: Comment },
     });
-    const newfeedLists = feedLists.map((item) => {
+    const newfeedLists = postList.map((item) => {
       if (!item.imageUrl) {
         return item;
       } else return { ...item.toJSON(), imageUrl: JSON.parse(item.imageUrl) };

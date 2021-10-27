@@ -4,7 +4,7 @@ const {
   Post,
   Draft,
   Comment,
-  UserInterAction,
+  UserInteraction,
   Notification,
 } = require('../models');
 
@@ -382,12 +382,11 @@ exports.userSavePost = async (req, res, next) => {
     const { postId } = req.params;
     const { isSaved } = req.body;
     // check userinteraction
-
-    const userHaveData = await UserInterAction.findOne({
+    const userHaveData = await UserInteraction.findOne({
       where: { userId: id, postId },
     });
     if (userHaveData) {
-      await UserInterAction.update(
+      await UserInteraction.update(
         {
           isSaved,
           isHided: userHaveData.isHided,
@@ -397,14 +396,17 @@ exports.userSavePost = async (req, res, next) => {
       );
       res.status(201).json({ message: 'Saved' });
     } else {
-      const res = await UserInterAction.create({
+      const interaction = await UserInteraction.create({
         isSaved,
-        isHided: 0,
-        isLiked: 0,
+        isHided: false,
+        isLiked: false,
+        userId: id,
+        postId,
       });
-      res.status(200).json({ message: 'Saved', UserInterAction: res });
+      res.status(200).json({ message: 'Saved', UserInterAction: interaction });
     }
   } catch (err) {
+    console.log(err);
     next(err);
   }
 };
@@ -416,7 +418,7 @@ exports.userHidePost = async (req, res, next) => {
     const { isHided } = req.body;
     // check userinteraction
 
-    const userHaveData = await UserInterAction.findOne({
+    const userHaveData = await UserInteraction.findOne({
       where: { userId: id, postId },
     });
     if (userHaveData) {
@@ -430,12 +432,14 @@ exports.userHidePost = async (req, res, next) => {
       );
       res.status(201).json({ message: 'Hided' });
     } else {
-      const res = await UserInterAction.create({
-        isSaved: 0,
+      const interaction = await UserInteraction.create({
+        isSaved: false,
         isHided,
-        isLiked: 0,
+        isLiked: false,
+        userId: id,
+        postId,
       });
-      res.status(200).json({ message: 'Hided', UserInterAction: res });
+      res.status(200).json({ message: 'Hided', UserInterAction: interaction });
     }
   } catch (err) {
     next(err);
@@ -452,11 +456,11 @@ exports.userLikePost = async (req, res, next) => {
     const postLike = await Post.findOne({ where: { postId } });
     await Post.update({ like: +postLike + +like }, { where: { postId } });
     // check userinteraction
-    const userHaveData = await UserInterAction.findOne({
+    const userHaveData = await UserInteraction.findOne({
       where: { userId: id, postId },
     });
     if (userHaveData) {
-      await UserInterAction.update(
+      await UserInteraction.update(
         {
           isSaved: userHaveData.isSaved,
           isHided: userHaveData.isHided,
@@ -473,12 +477,16 @@ exports.userLikePost = async (req, res, next) => {
       // });
       res.status(201).json({ message: 'Liked action' });
     } else {
-      const res = await UserInterAction.create({
+      const interaction = await UserInteraction.create({
         isSaved: 0,
         isHided: 0,
         isLiked,
+        userId: id,
+        postId,
       });
-      res.status(200).json({ message: 'Liked action', UserInterAction: res });
+      res
+        .status(200)
+        .json({ message: 'Liked action', UserInteraction: interaction });
     }
   } catch (err) {
     next(err);

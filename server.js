@@ -18,7 +18,7 @@ app.use(cors());
 
 /////////////////////////////// Route ต่างๆ
 
-// sequelize.sync({  });
+// sequelize.sync({});
 //////////////////////////////////////////
 
 app.use(passport.initialize());

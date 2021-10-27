@@ -13,9 +13,9 @@ module.exports = (sequelize, DataTypes) => {
         defaultValue: false,
       },
       isLiked: {
-        type: DataTypes.ENUM('1', '0', '-1'),
+        type: DataTypes.BOOLEAN,
         allowNull: false,
-        defaultValue: '0',
+        defaultValue: false,
       },
     },
     {
