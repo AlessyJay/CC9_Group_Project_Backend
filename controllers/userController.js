@@ -207,14 +207,29 @@ exports.resetpassword = async (req, res, next) => {
 exports.updateProfileImg = async (req, res, next) => {
   try {
     const { id } = req.user;
+    const { username, descriptions } = req.body;
     const result = await uploadPromise(req.file.path);
     fs.unlinkSync(req.file.path);
-    const rows = await User.update(
-      {
-        profileUrl: result.secure_url,
-      },
-      { where: { id } }
-    );
+    if (req.file) {
+      const rows = await User.update(
+        {
+          username,
+          descriptions,
+          profileUrl: result.secure_url,
+        },
+        { where: { id } }
+      );
+      if (!rows) return res.status(400).json({ message: 'Id does not match' });
+      res.status(201).json({ message: 'Update profile success' });
+    } else {
+      const rows = await User.update(
+        {
+          username,
+          descriptions,
+        },
+        { where: { id } }
+      );
+    }
     if (!rows) return res.status(400).json({ message: 'Id does not match' });
     res.status(201).json({ message: 'Update profile success' });
   } catch (err) {
