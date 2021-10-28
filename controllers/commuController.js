@@ -75,10 +75,11 @@ exports.checkCommunity = async (req, res, next) => {
   try {
     const { name } = req.body;
     const findCommunity = await Community.findOne({ where: { name } });
+    console.log(findCommunity);
     if (findCommunity) {
       return res.status(400).json({ message: 'Community is already used' });
     }
-    next();
+    res.status(201).json({ message: 'Verify' });
   } catch (err) {
     next(err);
   }
@@ -88,7 +89,7 @@ exports.createCommunity = async (req, res, next) => {
     const { id } = req.user;
     const { type, name } = req.body;
     const findCommunity = await Community.findOne({ where: { name } });
-    if (!findCommunity)
+    if (findCommunity)
       return res.status(400).json({ message: 'Community is already used' });
     const community = await Community.create({ type, name, userId: id });
     const member = await Member.create({
