@@ -177,7 +177,7 @@ exports.verifyUserforReset = async (req, res, next) => {
     const user = await User.findOne({ where: { username, email } });
     if (!user)
       return res.status(400).json({ message: 'Incorrect Email or Username' });
-    res.json({ message: `/resetpassword/${user.id}` });
+    res.json({ message: `Verify`, id: user.id });
   } catch (err) {
     next(err);
   }

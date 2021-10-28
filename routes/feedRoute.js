@@ -18,7 +18,8 @@ const {
 // Route :/feeds
 
 router.get('/allusers-communitys', getAllUserCommu);
-router.get('/usercommunitys', authenticateUser, getAllJoinedCommunity);
+// router.get('/usercommunitys', getAllJoinedCommunity);
+router.get('/usercommunitys', getAllJoinedCommunity);
 router.get('/allcommunity', getAllCommunity);
 router.get('/mainpage', getAllCommnutyPostMainPage);
 router.get('/useroverview', authenticateUser, getFeedUserOverviewTab);
