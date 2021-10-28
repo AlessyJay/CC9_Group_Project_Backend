@@ -26,7 +26,7 @@ const {
 // Post
 router.get('/:id', getPostbyId);
 // router.post('/createpost', authenticateUser, uploadMultiple, userCreatePost);
-router.post('/createpost', uploadMultiple, userCreatePost);
+router.post('/createpost', authenticateUser, uploadMultiple, userCreatePost);
 router.post('/savepost/:postId', authenticateUser, userSavePost);
 router.post('/hidepost/:postId', authenticateUser, userHidePost);
 router.post('/likepost/:postId', authenticateUser, userLikePost);

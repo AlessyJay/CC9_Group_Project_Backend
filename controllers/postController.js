@@ -34,13 +34,11 @@ exports.getPostbyId = async (req, res, next) => {
 // Create post
 exports.userCreatePost = async (req, res, next) => {
   try {
-    // const { id } = req.user;
-
+    const { id } = req.user;
     const { title, descriptions, type, notification, communityId, status } =
       req.body;
-
     if (
-      req.files &&
+      req.files.length !== 0 &&
       (req.files[0].path.includes('.mp4') ||
         req.files[0].path.includes('.mov4'))
     ) {
@@ -60,11 +58,11 @@ exports.userCreatePost = async (req, res, next) => {
         videoUrl: urls[0].secure_url,
         status,
         communityId: communityId ?? null,
-        userId: 1,
+        userId: id,
       };
       const post = await Post.create(postObj);
       res.json({ post });
-    } else if (req.files) {
+    } else if (req.files.length !== 0) {
       const urls = [];
       for (const file of req.files) {
         const { path } = file;
@@ -83,7 +81,7 @@ exports.userCreatePost = async (req, res, next) => {
         imageUrl: JSON.stringify(arrPath),
         status,
         communityId: communityId ?? null,
-        userId: 1,
+        userId: id,
       };
       const post = await Post.create(postObj);
       res.json({
@@ -98,7 +96,7 @@ exports.userCreatePost = async (req, res, next) => {
         allow_notification: notification,
         status,
         communityId: communityId ?? null,
-        userId: 1,
+        userId: id,
       };
       const post = await Post.create(postObj);
       res.json({ post });
@@ -122,14 +120,14 @@ exports.deletepost = async (req, res, next) => {
 // edit post
 exports.userEditPost = async (req, res, next) => {
   try {
-    // const { id } = req.user;
+    const { id } = req.user;
     const { postId } = req.params;
     const { title, descriptions, type, notification, communityId, status } =
       req.body;
 
     // Post ประเภทวิดิโอ
     if (
-      req.files &&
+      req.files.length !== 0 &&
       (req.files[0].path.includes('.mp4') ||
         req.files[0].path.includes('.mov4'))
     ) {
@@ -150,13 +148,13 @@ exports.userEditPost = async (req, res, next) => {
         videoUrl: urls[0].secure_url,
         status,
         communityId,
-        userId: 3,
-        // userId: id,
+        // userId: 3,
+        userId: id,
       };
       await Post.update(postObj, { where: { postId } });
       res.json({ message: 'Update successfully' });
       // Post ประเภทรูปภาพ
-    } else if (req.files) {
+    } else if (req.files.length !== 0) {
       const urls = [];
       for (const file of req.files) {
         const { path } = file;
@@ -174,8 +172,8 @@ exports.userEditPost = async (req, res, next) => {
         imageUrl: JSON.stringify(arrPath),
         status,
         communityId,
-        userId: 3,
-        // userId: id,
+        userId: id,
+        // userId: 3,
       };
       await Post.update(postObj, { where: { postId } });
       res.json({ message: 'Update successfully' });
@@ -188,8 +186,8 @@ exports.userEditPost = async (req, res, next) => {
         allow_notification: notification,
         status,
         communityId,
-        userId: 3,
-        // userId:id,
+        // userId: 3,
+        userId: id,
       };
       await Post.update(postObj, { where: { postId } });
       res.json({ message: 'Update successfully' });
@@ -205,7 +203,7 @@ exports.createDraftPost = async (req, res, next) => {
     const { title, descriptions, type, notification, communityId, status } =
       req.body;
     if (
-      req.files &&
+      req.files.length !== 0 &&
       (req.files[0].path.includes('.mp4') ||
         req.files[0].path.includes('.mov4'))
     ) {
@@ -230,7 +228,7 @@ exports.createDraftPost = async (req, res, next) => {
       };
       const post = await Draft.create(postObj);
       res.json({ post });
-    } else if (req.files) {
+    } else if (req.files.length !== 0) {
       const urls = [];
       for (const file of req.files) {
         const { path } = file;
