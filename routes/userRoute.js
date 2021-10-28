@@ -15,6 +15,7 @@ const {
   updateProfile,
   updateProfileImg,
   updateBannerImg,
+  getUserProfilebyId,
 } = userController;
 
 const passport = require('passport');
@@ -35,6 +36,7 @@ router.put(
 );
 router.put('/updateBanner', authenticateUser, uploadBranner, updateBannerImg);
 router.put('/updateUserProfile', authenticateUser, updateProfile);
+router.get('/:id', getUserProfilebyId);
 // update username imgprofile branner firstname lastname
 // change password
 module.exports = router;

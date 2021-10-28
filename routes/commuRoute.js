@@ -17,6 +17,7 @@ const {
   getRuleCommunity,
   joinCommunity,
   leaveCommunity,
+  checkCommunity,
 } = commuController;
 const {
   uploadMultiple,
@@ -31,7 +32,9 @@ router.get('/:communityId', getCommunitybyId);
 router.get('/posts/:communityId', getCommunityPostInCommunity);
 router.get('/populars/:communityId', getPopularPostInCommunity);
 router.get('/news/:communityId', getNewPostInCommunity);
-router.post('/', authenticateUser, createCommunity);
+// router.post('/checkname', authenticateUser, checkCommunity);
+// router.post('/checkname', checkCommunity);
+router.post('/', authenticateUser, checkCommunity, createCommunity);
 router.put('/profile/:communityId', uploadProfileImg, updateprofileCommunity);
 router.put('/banner/:communityId', uploadBranner, updateBannerCommunity);
 router.get('/rules/:communityId', getRuleCommunity);

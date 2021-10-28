@@ -70,10 +70,26 @@ exports.getNewPostInCommunity = async (req, res, next) => {
     next(err);
   }
 };
+
+exports.checkCommunity = async (req, res, next) => {
+  try {
+    const { name } = req.body;
+    const findCommunity = await Community.findOne({ where: { name } });
+    if (findCommunity) {
+      return res.status(400).json({ message: 'Community is already used' });
+    }
+    next();
+  } catch (err) {
+    next(err);
+  }
+};
 exports.createCommunity = async (req, res, next) => {
   try {
     const { id } = req.user;
     const { type, name } = req.body;
+    const findCommunity = await Community.findOne({ where: { name } });
+    if (!findCommunity)
+      return res.status(400).json({ message: 'Community is already used' });
     const community = await Community.create({ type, name, userId: id });
     const member = await Member.create({
       role: 'ADMIN',
