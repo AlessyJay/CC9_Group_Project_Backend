@@ -8,6 +8,6 @@ const { getNotificationByUser, seenNotification } = notificationController;
 // route : /notifications
 
 router.get('/', authenticateUser, getNotificationByUser);
-router.put('/', authenticateUser, seenNotification);
+router.put('/:id', authenticateUser, seenNotification);
 
 module.exports = router;
