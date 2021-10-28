@@ -72,6 +72,14 @@ module.exports = (sequelize, DataTypes) => {
       onDelete: 'RESTRICT',
       onUpdate: 'RESTRICT',
     });
+    Post.hasMany(models.UserInteraction, {
+      foreignKey: {
+        name: 'postId',
+        allowNull: false,
+      },
+      onDelete: 'RESTRICT',
+      onUpdate: 'RESTRICT',
+    });
   };
   return Post;
 };

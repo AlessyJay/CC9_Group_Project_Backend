@@ -1,5 +1,6 @@
 const {
   Community,
+  Comment,
   User,
   Member,
   UserInteraction,
@@ -147,8 +148,15 @@ exports.getFeedUserOverviewTab = async (req, res, next) => {
   try {
     // const { id } = req.user;
     const feedLists = await Post.findAll({
-      where: { userId: 3, status: true },
+      where: { userId: 1, status: true },
       order: [['updatedAt', 'DESC']],
+      include: [
+        { model: Comment },
+        {
+          model: UserInteraction,
+          attributes: ['isLiked', 'isHided', 'isSaved', 'userId', 'postId'],
+        },
+      ],
     });
 
     const newfeedLists = feedLists.map((item) => {
@@ -165,10 +173,17 @@ exports.getFeedUserOverviewTab = async (req, res, next) => {
 
 exports.getFeedUserPostTab = async (req, res, next) => {
   try {
-    // const { id } = req.user;
+    const { id } = req.user;
     const feedLists = await Post.findAll({
-      where: { userId: 3 },
+      where: { userId: id },
       order: [['updatedAt', 'DESC']],
+      include: [
+        { model: Comment },
+        {
+          model: UserInteraction,
+          attributes: ['isLiked', 'isHided', 'isSaved', 'userId', 'postId'],
+        },
+      ],
     });
     const newfeedLists = feedLists.map((item) => {
       if (!item.imageUrl) {
@@ -183,9 +198,9 @@ exports.getFeedUserPostTab = async (req, res, next) => {
 };
 exports.getFeedUserHide = async (req, res, next) => {
   try {
-    // const { id } = req.user;
+    const { id } = req.user;
     const feedLists = await UserInteraction.findAll({
-      where: { userId: 3, isHided: true },
+      where: { userId: id, isHided: true },
       attributes: { exclude: ['createdAt', 'updatedAt'] },
       include: {
         model: Post,
@@ -204,7 +219,7 @@ exports.getFeedUserHide = async (req, res, next) => {
 };
 exports.getFeedUserSave = async (req, res, next) => {
   try {
-    // const { id } = req.user;
+    const { id } = req.user;
     const feedLists = await UserInteraction.findAll({
       where: { userId: id, isSaved: true },
       attributes: { exclude: ['createdAt', 'updatedAt'] },
@@ -229,6 +244,13 @@ exports.getAllCommnutyPostMainPage = async (req, res, next) => {
   try {
     const postLists = await Post.findAll({
       where: { communityId: { [Op.not]: null } },
+      include: [
+        { model: Comment },
+        {
+          model: UserInteraction,
+          attributes: ['isLiked', 'isHided', 'isSaved', 'userId', 'postId'],
+        },
+      ],
     });
     const newfeedLists = postLists.map((item) => {
       if (!item.imageUrl) {
@@ -245,6 +267,13 @@ exports.getFeedPopularMain = async (req, res, next) => {
   try {
     const postLists = await Post.findAll({
       order: [['like', 'DESC']],
+      include: [
+        { model: Comment },
+        {
+          model: UserInteraction,
+          attributes: ['isLiked', 'isHided', 'isSaved', 'userId', 'postId'],
+        },
+      ],
     });
 
     const newfeedLists = postLists.map((item) => {
@@ -263,6 +292,13 @@ exports.getFeedPopularUser = async (req, res, next) => {
     const postLists = await Post.findAll({
       where: { userId: id, communityId: null },
       order: [['like', 'DESC']],
+      include: [
+        { model: Comment },
+        {
+          model: UserInteraction,
+          attributes: ['isLiked', 'isHided', 'isSaved', 'userId', 'postId'],
+        },
+      ],
     });
 
     const newfeedLists = postLists.map((item) => {

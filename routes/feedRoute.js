@@ -18,11 +18,10 @@ const {
 // Route :/feeds
 
 router.get('/allusers-communitys', getAllUserCommu);
-// router.get('/usercommunitys', getAllJoinedCommunity);
-router.get('/usercommunitys', getAllJoinedCommunity);
+router.get('/usercommunitys', authenticateUser, getAllJoinedCommunity);
 router.get('/allcommunity', getAllCommunity);
 router.get('/mainpage', getAllCommnutyPostMainPage);
-router.get('/useroverview', authenticateUser, getFeedUserOverviewTab);
+router.get('/useroverview', getFeedUserOverviewTab);
 router.get('/userposts', authenticateUser, getFeedUserPostTab);
 router.get('/userhidepost', authenticateUser, getFeedUserHide);
 router.get('/usersavepost', authenticateUser, getFeedUserSave);
