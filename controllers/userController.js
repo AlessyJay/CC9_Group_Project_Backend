@@ -259,7 +259,6 @@ exports.updateProfile = async (req, res, next) => {
     const { id } = req.user;
     const { username, description } = req.body;
     // check username in system
-
     const checkUsername = await User.findOne({ where: username });
     if (!checkUsername)
       return res.status(400).json({ message: 'Username already used' });

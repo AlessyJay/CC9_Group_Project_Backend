@@ -51,7 +51,7 @@ exports.userCreatePost = async (req, res, next) => {
       }
       const postObj = {
         title,
-        descriptions,
+
         type,
         like: 0,
         allow_notification: notification,
@@ -74,7 +74,7 @@ exports.userCreatePost = async (req, res, next) => {
       console.log(arrPath);
       const postObj = {
         title,
-        descriptions,
+
         type,
         like: 0,
         allow_notification: notification,
@@ -142,7 +142,7 @@ exports.userEditPost = async (req, res, next) => {
       }
       const postObj = {
         title,
-        descriptions,
+
         type,
         allow_notification: notification,
         videoUrl: urls[0].secure_url,
@@ -166,7 +166,7 @@ exports.userEditPost = async (req, res, next) => {
 
       const postObj = {
         title,
-        descriptions,
+
         type,
         allow_notification: notification,
         imageUrl: JSON.stringify(arrPath),
@@ -217,7 +217,6 @@ exports.createDraftPost = async (req, res, next) => {
       }
       const postObj = {
         title,
-        descriptions,
         type,
         like: 0,
         allow_notification: notification,
@@ -237,10 +236,9 @@ exports.createDraftPost = async (req, res, next) => {
         fs.unlinkSync(path);
       }
       const arrPath = urls.map((item) => item.secure_url);
-      console.log(arrPath);
+      // console.log(arrPath);
       const postObj = {
         title,
-        descriptions,
         type,
         like: 0,
         allow_notification: notification,
@@ -308,7 +306,7 @@ exports.userEditDraft = async (req, res, next) => {
       }
       const postObj = {
         title,
-        descriptions,
+
         type,
         allow_notification: notification,
         videoUrl: urls[0].secure_url,
@@ -332,7 +330,7 @@ exports.userEditDraft = async (req, res, next) => {
 
       const postObj = {
         title,
-        descriptions,
+
         type,
         allow_notification: notification,
         imageUrl: JSON.stringify(arrPath),
