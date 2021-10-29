@@ -280,7 +280,7 @@ exports.updateProfile = async (req, res, next) => {
 exports.getUserProfilebyId = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const user = await User.findOne({ where: { userId: id } });
+    const user = await User.findOne({ where: { id } });
     if (!user)
       return res.status(400).json({ message: 'This user cannot found' });
     res.status(200).json({ user });

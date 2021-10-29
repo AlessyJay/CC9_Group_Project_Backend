@@ -247,6 +247,11 @@ exports.getAllCommnutyPostMainPage = async (req, res, next) => {
       include: [
         { model: Comment },
         {
+          model: User,
+          attributes: ['id', 'username', 'profileUrl'],
+        },
+        { model: Community },
+        {
           model: UserInteraction,
           attributes: ['isLiked', 'isHided', 'isSaved', 'userId', 'postId'],
         },
