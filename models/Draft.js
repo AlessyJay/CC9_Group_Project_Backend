@@ -7,8 +7,8 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
       },
       descriptions: {
-        type: DataTypes.TEXT,
-        allowNull: false,
+        type: DataTypes.TEXT('long'),
+        allowNull: true,
       },
       type: {
         type: DataTypes.ENUM('main', 'img'),

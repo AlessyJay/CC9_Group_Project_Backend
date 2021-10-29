@@ -106,6 +106,9 @@ exports.updateprofileCommunity = async (req, res, next) => {
   try {
     const { communityId } = req.params;
     const { descriptions } = req.body;
+    console.log(communityId);
+    console.log(descriptions);
+    console.log(req.file);
     if (req.file) {
       const result = await uploadPromise(req.file.path);
       fs.unlinkSync(req.file.path);

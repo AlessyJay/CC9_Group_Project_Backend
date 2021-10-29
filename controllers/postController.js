@@ -51,7 +51,6 @@ exports.userCreatePost = async (req, res, next) => {
       }
       const postObj = {
         title,
-
         type,
         like: 0,
         allow_notification: notification,
