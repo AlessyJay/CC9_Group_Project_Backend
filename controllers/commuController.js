@@ -1,6 +1,6 @@
-const { uploadPromise } = require('./uploadCloud');
-const fs = require('fs');
-const { Community, Rule, Post, Comment, Member } = require('../models');
+const { uploadPromise } = require("./uploadCloud");
+const fs = require("fs");
+const { Community, Rule, Post, Comment, Member, User } = require("../models");
 
 // get ข้อมูล community และ จำนวนคนใน community
 exports.getCommunitybyId = async (req, res, next) => {
@@ -19,7 +19,7 @@ exports.getCommunityPostInCommunity = async (req, res, next) => {
     const { communityId } = req.params;
     const postList = await Post.findAll({
       where: { communityId, status: true },
-      include: { model: Comment },
+      include: [{ model: Comment }, { model: User }, { model: Community }],
     });
     const newfeedLists = postList.map((item) => {
       if (!item.imageUrl) {
@@ -39,7 +39,7 @@ exports.getPopularPostInCommunity = async (req, res, next) => {
     const postList = await Post.findAll({
       where: { communityId, status: true },
       include: { model: Comment },
-      order: [['like', 'DESC']],
+      order: [["like", "DESC"]],
     });
     const newfeedLists = postList.map((item) => {
       if (!item.imageUrl) {
@@ -57,7 +57,7 @@ exports.getNewPostInCommunity = async (req, res, next) => {
     const { communityId } = req.params;
     const postList = await Post.findAll({
       where: { communityId, status: true },
-      order: [['createdAt', 'DESC']],
+      order: [["createdAt", "DESC"]],
       include: { model: Comment },
     });
     const newfeedLists = postList.map((item) => {
@@ -77,9 +77,9 @@ exports.checkCommunity = async (req, res, next) => {
     const findCommunity = await Community.findOne({ where: { name } });
     console.log(findCommunity);
     if (findCommunity) {
-      return res.status(400).json({ message: 'Community is already used' });
+      return res.status(400).json({ message: "Community is already used" });
     }
-    res.status(201).json({ message: 'Verify' });
+    res.status(201).json({ message: "Verify" });
   } catch (err) {
     next(err);
   }
@@ -90,10 +90,10 @@ exports.createCommunity = async (req, res, next) => {
     const { type, name } = req.body;
     const findCommunity = await Community.findOne({ where: { name } });
     if (findCommunity)
-      return res.status(400).json({ message: 'Community is already used' });
+      return res.status(400).json({ message: "Community is already used" });
     const community = await Community.create({ type, name, userId: id });
     const member = await Member.create({
-      role: 'ADMIN',
+      role: "ADMIN",
       communityId: community.id,
       userId: id,
     });
@@ -119,11 +119,11 @@ exports.updateprofileCommunity = async (req, res, next) => {
         },
         { where: { id: communityId } }
       );
-      if (!rows) return res.status(400).json({ message: 'Id does not match' });
-      res.status(201).json({ message: 'Update Successfully' });
+      if (!rows) return res.status(400).json({ message: "Id does not match" });
+      res.status(201).json({ message: "Update Successfully" });
     } else {
       await Community.update({ descriptions }, { where: { id: communityId } });
-      res.status(201).json({ message: 'Update Successfully' });
+      res.status(201).json({ message: "Update Successfully" });
     }
   } catch (err) {
     next(err);
@@ -143,11 +143,11 @@ exports.updateBannerCommunity = async (req, res, next) => {
         },
         { where: { id: communityId } }
       );
-      if (!rows) return res.status(400).json({ message: 'Id does not match' });
-      res.status(201).json({ message: 'Update Successfully' });
+      if (!rows) return res.status(400).json({ message: "Id does not match" });
+      res.status(201).json({ message: "Update Successfully" });
     } else {
       await Community.update({ descriptions }, { where: { id: communityId } });
-      res.status(201).json({ message: 'Update Successfully' });
+      res.status(201).json({ message: "Update Successfully" });
     }
   } catch (err) {
     next(err);
@@ -170,7 +170,7 @@ exports.ruleCommunity = async (req, res, next) => {
     const { communityId } = req.params;
     const { rule } = req.body;
     const result = await Rule.create({ ruleDetail: rule, communityId });
-    res.status(200).json({ message: 'Create  Successfully', rule: result });
+    res.status(200).json({ message: "Create  Successfully", rule: result });
   } catch (err) {
     next(err);
   }
@@ -183,7 +183,7 @@ exports.updateRuleCommunity = async (req, res, next) => {
     const { rule } = req.body;
     console.log(newArrRules);
     await Rule.update({ ruleDetail: rule }, { where: { id: ruleId } });
-    res.status(200).json({ message: 'Updated  Successfully' });
+    res.status(200).json({ message: "Updated  Successfully" });
   } catch (err) {
     next(err);
   }
@@ -205,7 +205,7 @@ exports.getPostPending = async (req, res, next) => {
     const { communityId } = req.params;
     const postLists = await Post.findAll({
       where: { communityId, status: false },
-      order: [['updatedAt', 'DESC']],
+      order: [["updatedAt", "DESC"]],
     });
     const newfeedLists = feedLists.map((item) => {
       if (!item.imageUrl) {
@@ -222,7 +222,7 @@ exports.approvePostRequest = async (req, res, next) => {
   try {
     const { postId } = req.params;
     await Post.update({ status: true }, { where: { postId } });
-    res.status(201).json({ message: 'Post has been approved' });
+    res.status(201).json({ message: "Post has been approved" });
   } catch (err) {
     next(err);
   }
@@ -233,11 +233,11 @@ exports.joinCommunity = async (req, res, next) => {
     const { id } = req.user;
     const { communityId } = req.params;
     const result = await Member.create({
-      role: 'MEMBER',
+      role: "MEMBER",
       userId: id,
       communityId,
     });
-    res.status(200).json({ member: result, message: 'Joined' });
+    res.status(200).json({ member: result, message: "Joined" });
   } catch (err) {
     next(err);
   }
@@ -248,7 +248,7 @@ exports.leaveCommunity = async (req, res, next) => {
     const { id } = req.user;
     const { communityId } = req.params;
     await Member.destroy({
-      where: { userId: id, communityId, role: 'MEMBER' },
+      where: { userId: id, communityId, role: "MEMBER" },
     });
     res.status(204).json({});
   } catch (err) {

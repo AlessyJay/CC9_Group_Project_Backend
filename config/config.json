@@ -1,6 +1,6 @@
 {
   "development": {
-    "username": "root001",
+    "username": "root",
     "password": "046012574",
     "database": "reddit_clone",
     "host": "127.0.0.1",

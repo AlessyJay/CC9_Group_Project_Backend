@@ -1,12 +1,14 @@
-const { uploadPromise, uploadVideoPromise } = require('./uploadCloud');
-const fs = require('fs');
+const { uploadPromise, uploadVideoPromise } = require("./uploadCloud");
+const fs = require("fs");
 const {
   Post,
   Draft,
   Comment,
   UserInteraction,
   Notification,
-} = require('../models');
+  Community,
+  User,
+} = require("../models");
 
 //Get post each Id by PostId
 
@@ -15,9 +17,19 @@ exports.getPostbyId = async (req, res, next) => {
     const { id } = req.params;
     const post = await Post.findOne({
       where: { id, isDeleted: false },
+      include: [
+        { model: Community },
+        {
+          model: User,
+          attributes: ["id", "username", "profileUrl"],
+        },
+      ],
     });
 
-    const comment = await Comment.findAll({ where: { postId: id } });
+    const comment = await Comment.findAll({
+      where: { postId: id },
+      include: { model: User, attributes: ["id", "username", "profileUrl"] },
+    });
     if (!post) return res.status(400).json({ message: "Id doesn't match" });
     res.status(200).json({
       post: {
@@ -39,13 +51,13 @@ exports.userCreatePost = async (req, res, next) => {
       req.body;
     if (
       req.files.length !== 0 &&
-      (req.files[0].path.includes('.mp4') ||
-        req.files[0].path.includes('.mov4'))
+      (req.files[0].path.includes(".mp4") ||
+        req.files[0].path.includes(".mov4"))
     ) {
       const urls = [];
       for (const file of req.files) {
         const { path } = file;
-        const result = await uploadPromise(path, { resource_type: 'video' });
+        const result = await uploadPromise(path, { resource_type: "video" });
         urls.push(result);
         fs.unlinkSync(path);
       }
@@ -127,14 +139,14 @@ exports.userEditPost = async (req, res, next) => {
     // Post ประเภทวิดิโอ
     if (
       req.files.length !== 0 &&
-      (req.files[0].path.includes('.mp4') ||
-        req.files[0].path.includes('.mov4'))
+      (req.files[0].path.includes(".mp4") ||
+        req.files[0].path.includes(".mov4"))
     ) {
       const urls = [];
       for (const file of req.files) {
         const { path } = file;
         const result = await uploadPromise(path, {
-          resource_type: 'video',
+          resource_type: "video",
         });
         urls.push(result);
         fs.unlinkSync(path);
@@ -151,7 +163,7 @@ exports.userEditPost = async (req, res, next) => {
         userId: id,
       };
       await Post.update(postObj, { where: { postId } });
-      res.json({ message: 'Update successfully' });
+      res.json({ message: "Update successfully" });
       // Post ประเภทรูปภาพ
     } else if (req.files.length !== 0) {
       const urls = [];
@@ -175,7 +187,7 @@ exports.userEditPost = async (req, res, next) => {
         // userId: 3,
       };
       await Post.update(postObj, { where: { postId } });
-      res.json({ message: 'Update successfully' });
+      res.json({ message: "Update successfully" });
       // Post ประเภททั่วไป
     } else {
       const postObj = {
@@ -189,7 +201,7 @@ exports.userEditPost = async (req, res, next) => {
         userId: id,
       };
       await Post.update(postObj, { where: { postId } });
-      res.json({ message: 'Update successfully' });
+      res.json({ message: "Update successfully" });
     }
   } catch (err) {
     next(err);
@@ -203,14 +215,14 @@ exports.createDraftPost = async (req, res, next) => {
       req.body;
     if (
       req.files.length !== 0 &&
-      (req.files[0].path.includes('.mp4') ||
-        req.files[0].path.includes('.mov4'))
+      (req.files[0].path.includes(".mp4") ||
+        req.files[0].path.includes(".mov4"))
     ) {
       // console.log(req.files);
       const urls = [];
       for (const file of req.files) {
         const { path } = file;
-        const result = await uploadPromise(path, { resource_type: 'video' });
+        const result = await uploadPromise(path, { resource_type: "video" });
         urls.push(result);
         fs.unlinkSync(path);
       }
@@ -291,14 +303,14 @@ exports.userEditDraft = async (req, res, next) => {
     // Post ประเภทวิดิโอ
     if (
       req.files &&
-      (req.files[0].path.includes('.mp4') ||
-        req.files[0].path.includes('.mov4'))
+      (req.files[0].path.includes(".mp4") ||
+        req.files[0].path.includes(".mov4"))
     ) {
       const urls = [];
       for (const file of req.files) {
         const { path } = file;
         const result = await uploadPromise(path, {
-          resource_type: 'video',
+          resource_type: "video",
         });
         urls.push(result);
         fs.unlinkSync(path);
@@ -315,7 +327,7 @@ exports.userEditDraft = async (req, res, next) => {
         // userId: id,
       };
       await Draft.update(postObj, { where: { postId } });
-      res.json({ message: 'Update successfully' });
+      res.json({ message: "Update successfully" });
       // Post ประเภทรูปภาพ
     } else if (req.files) {
       const urls = [];
@@ -339,7 +351,7 @@ exports.userEditDraft = async (req, res, next) => {
         // userId: id,
       };
       await Draft.update(postObj, { where: { postId } });
-      res.json({ message: 'Update successfully' });
+      res.json({ message: "Update successfully" });
       // Post ประเภททั่วไป
     } else {
       const postObj = {
@@ -353,7 +365,7 @@ exports.userEditDraft = async (req, res, next) => {
         // userId:id,
       };
       await Draft.update(postObj, { where: { postId } });
-      res.json({ message: 'Update successfully' });
+      res.json({ message: "Update successfully" });
     }
   } catch (err) {
     next(err);
@@ -389,7 +401,7 @@ exports.userSavePost = async (req, res, next) => {
         },
         { where: { userId: id, postId } }
       );
-      res.status(201).json({ message: 'Saved' });
+      res.status(201).json({ message: "Saved" });
     } else {
       const interaction = await UserInteraction.create({
         isSaved,
@@ -398,7 +410,7 @@ exports.userSavePost = async (req, res, next) => {
         userId: id,
         postId,
       });
-      res.status(200).json({ message: 'Saved', UserInterAction: interaction });
+      res.status(200).json({ message: "Saved", UserInterAction: interaction });
     }
   } catch (err) {
     console.log(err);
@@ -425,7 +437,7 @@ exports.userHidePost = async (req, res, next) => {
         },
         { where: { userId: id, postId } }
       );
-      res.status(201).json({ message: 'Hided' });
+      res.status(201).json({ message: "Hided" });
     } else {
       const interaction = await UserInteraction.create({
         isSaved: false,
@@ -434,7 +446,7 @@ exports.userHidePost = async (req, res, next) => {
         userId: id,
         postId,
       });
-      res.status(200).json({ message: 'Hided', UserInterAction: interaction });
+      res.status(200).json({ message: "Hided", UserInterAction: interaction });
     }
   } catch (err) {
     next(err);
@@ -470,7 +482,7 @@ exports.userLikePost = async (req, res, next) => {
       //   userId: id,
       //   userIdToNoti,
       // });
-      res.status(201).json({ message: 'Liked action' });
+      res.status(201).json({ message: "Liked action" });
     } else {
       const interaction = await UserInteraction.create({
         isSaved: 0,
@@ -481,7 +493,7 @@ exports.userLikePost = async (req, res, next) => {
       });
       res
         .status(200)
-        .json({ message: 'Liked action', UserInteraction: interaction });
+        .json({ message: "Liked action", UserInteraction: interaction });
     }
   } catch (err) {
     next(err);
