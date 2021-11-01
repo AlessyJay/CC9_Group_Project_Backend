@@ -285,7 +285,7 @@ exports.getDraftPost = async (req, res, next) => {
   try {
     const { id } = req.user;
     const draftLists = await Draft.findAll({ where: { userId: id } });
-
+    console.log(draftLists);
     res.status(200).json({ draftLists });
   } catch (err) {
     next(err);
