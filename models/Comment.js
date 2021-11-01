@@ -1,15 +1,10 @@
 module.exports = (sequelize, DataTypes) => {
   const Comment = sequelize.define(
-    'Comment',
+    "Comment",
     {
       commentDetails: {
         type: DataTypes.TEXT,
         allowNull: false,
-      },
-      like: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        defaulValue: 0,
       },
     },
     {
@@ -20,19 +15,19 @@ module.exports = (sequelize, DataTypes) => {
   Comment.associate = (models) => {
     Comment.belongsTo(models.User, {
       foreignKey: {
-        name: 'userId',
+        name: "userId",
         allowNull: false,
       },
-      onDelete: 'RESTRICT',
-      onUpdate: 'RESTRICT',
+      onDelete: "RESTRICT",
+      onUpdate: "RESTRICT",
     });
     Comment.belongsTo(models.Post, {
       foreignKey: {
-        name: 'postId',
+        name: "postId",
         allowNull: false,
       },
-      onDelete: 'RESTRICT',
-      onUpdate: 'RESTRICT',
+      onDelete: "RESTRICT",
+      onUpdate: "RESTRICT",
     });
   };
   return Comment;

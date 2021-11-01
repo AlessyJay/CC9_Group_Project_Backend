@@ -1,4 +1,4 @@
-const { Comment, Notification } = require('../models');
+const { Comment, Notification } = require("../models");
 
 //create comment
 exports.createComment = async (req, res, next) => {
@@ -7,7 +7,6 @@ exports.createComment = async (req, res, next) => {
     const { userToNoti, postId, commentDetails } = req.body;
     const comment = await Comment.create({
       commentDetails,
-      like,
       userId: id,
       postId,
     });
@@ -15,7 +14,7 @@ exports.createComment = async (req, res, next) => {
     const notification = await Notification.create({
       userToNoti,
       postId,
-      userId,
+      userId: id,
       isSeen: false,
     });
     res.status(200).json({ comment, notification });
@@ -33,7 +32,7 @@ exports.editComment = async (req, res, next) => {
       { commentDetails },
       { where: { id: commentId, userId: id } }
     );
-    res.status(201).json({ message: 'Updated successfully' });
+    res.status(201).json({ message: "Updated successfully" });
   } catch (err) {
     next(err);
   }
@@ -56,7 +55,7 @@ exports.likeComment = async (req, res, next) => {
     const { commendId } = req.params;
     const { like } = req.body;
     await Comment.update({ like }, { where: { id: commendId } });
-    res.status(201).json({ message: 'Updated' });
+    res.status(201).json({ message: "Updated" });
   } catch (err) {
     next(err);
   }
