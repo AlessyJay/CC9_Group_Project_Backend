@@ -181,7 +181,7 @@ exports.updateRuleCommunity = async (req, res, next) => {
   try {
     const { ruleId } = req.params;
     const { rule } = req.body;
-    console.log(newArrRules);
+
     await Rule.update({ ruleDetail: rule }, { where: { id: ruleId } });
     res.status(200).json({ message: "Updated  Successfully" });
   } catch (err) {

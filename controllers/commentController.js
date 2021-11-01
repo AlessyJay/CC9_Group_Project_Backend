@@ -10,14 +10,16 @@ exports.createComment = async (req, res, next) => {
       userId: id,
       postId,
     });
-
-    const notification = await Notification.create({
-      userToNoti,
-      postId,
-      userId: id,
-      isSeen: false,
-    });
-    res.status(200).json({ comment, notification });
+    if (id !== userToNoti) {
+      const notification = await Notification.create({
+        userIdToNoti: userToNoti,
+        postId,
+        userId: id,
+        isSeen: false,
+      });
+      res.status(200).json({ comment, notification });
+    }
+    res.status(200).json({ comment });
   } catch (err) {
     next(err);
   }
