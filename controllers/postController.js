@@ -162,7 +162,7 @@ exports.userEditPost = async (req, res, next) => {
         // userId: 3,
         userId: id,
       };
-      await Post.update(postObj, { where: { postId } });
+      await Post.update(postObj, { where: { id: postId } });
       res.json({ message: "Update successfully" });
       // Post ประเภทรูปภาพ
     } else if (req.files.length !== 0) {
@@ -186,7 +186,7 @@ exports.userEditPost = async (req, res, next) => {
         userId: id,
         // userId: 3,
       };
-      await Post.update(postObj, { where: { postId } });
+      await Post.update(postObj, { where: { id: postId } });
       res.json({ message: "Update successfully" });
       // Post ประเภททั่วไป
     } else {
@@ -200,7 +200,7 @@ exports.userEditPost = async (req, res, next) => {
         // userId: 3,
         userId: id,
       };
-      await Post.update(postObj, { where: { postId } });
+      await Post.update(postObj, { where: { id: postId } });
       res.json({ message: "Update successfully" });
     }
   } catch (err) {
@@ -284,7 +284,10 @@ exports.createDraftPost = async (req, res, next) => {
 exports.getDraftPost = async (req, res, next) => {
   try {
     const { id } = req.user;
-    const draftLists = await Draft.findAll({ where: { userId: id } });
+    const draftLists = await Draft.findAll({
+      where: { userId: id },
+      include: [{ model: Community }, { model: User }],
+    });
     console.log(draftLists);
     res.status(200).json({ draftLists });
   } catch (err) {
@@ -295,14 +298,12 @@ exports.getDraftPost = async (req, res, next) => {
 
 exports.userEditDraft = async (req, res, next) => {
   try {
-    // const { id } = req.user;
-    const { postId } = req.params;
+    const { draftId } = req.params;
     const { title, descriptions, type, notification, communityId, status } =
       req.body;
-
     // Post ประเภทวิดิโอ
     if (
-      req.files &&
+      req.files.length !== 0 &&
       (req.files[0].path.includes(".mp4") ||
         req.files[0].path.includes(".mov4"))
     ) {
@@ -317,19 +318,16 @@ exports.userEditDraft = async (req, res, next) => {
       }
       const postObj = {
         title,
-
         type,
         allow_notification: notification,
         videoUrl: urls[0].secure_url,
         status,
         communityId,
-        userId: 3,
-        // userId: id,
       };
-      await Draft.update(postObj, { where: { postId } });
+      await Draft.update(postObj, { where: { id: draftId } });
       res.json({ message: "Update successfully" });
       // Post ประเภทรูปภาพ
-    } else if (req.files) {
+    } else if (req.files.length !== 0) {
       const urls = [];
       for (const file of req.files) {
         const { path } = file;
@@ -341,16 +339,13 @@ exports.userEditDraft = async (req, res, next) => {
 
       const postObj = {
         title,
-
         type,
         allow_notification: notification,
         imageUrl: JSON.stringify(arrPath),
         status,
         communityId,
-        userId: 3,
-        // userId: id,
       };
-      await Draft.update(postObj, { where: { postId } });
+      await Draft.update(postObj, { where: { id: draftId } });
       res.json({ message: "Update successfully" });
       // Post ประเภททั่วไป
     } else {
@@ -361,10 +356,8 @@ exports.userEditDraft = async (req, res, next) => {
         allow_notification: notification,
         status,
         communityId,
-        userId: 3,
-        // userId:id,
       };
-      await Draft.update(postObj, { where: { postId } });
+      await Draft.update(postObj, { where: { id: draftId } });
       res.json({ message: "Update successfully" });
     }
   } catch (err) {

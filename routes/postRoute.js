@@ -12,6 +12,7 @@ const {
 
 const {
   userCreatePost,
+  userEditDraft,
   deletepost,
   deleteDraft,
   getDraftPost,
@@ -23,24 +24,21 @@ const {
   createDraftPost,
 } = postController;
 
-// Post
+router.put("/drafts/:draftId", authenticateUser, uploadMultiple, userEditDraft);
 router.get("/drafts", authenticateUser, getDraftPost);
 router.get("/:id", getPostbyId);
-// router.post('/createpost', authenticateUser, uploadMultiple, userCreatePost);
 router.post("/createpost", authenticateUser, uploadMultiple, userCreatePost);
 router.post("/savepost/:postId", authenticateUser, userSavePost);
 router.post("/hidepost/:postId", authenticateUser, userHidePost);
 router.post("/likepost/:postId", authenticateUser, userLikePost);
 router.put("/:postId", authenticateUser, uploadMultiple, userEditPost);
 router.delete("/:id", authenticateUser, deletepost);
-// Draft
 router.post(
   "/drafts/createdraft",
   authenticateUser,
   uploadMultiple,
   createDraftPost
 );
-router.put("/drafts/:postId", authenticateUser, uploadMultiple, userEditPost);
 router.delete("/drafts/:id", authenticateUser, deleteDraft);
 
 module.exports = router;
