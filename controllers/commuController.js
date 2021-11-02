@@ -6,7 +6,15 @@ const { Community, Rule, Post, Comment, Member, User } = require("../models");
 exports.getCommunitybyId = async (req, res, next) => {
   try {
     const { communityId } = req.params;
-    const community = await Community.findOne({ where: { id: communityId } });
+    const community = await Community.findOne({
+      where: { id: communityId },
+      include: {
+        model: Member,
+        attributes: {
+          exclude: ["id", "createdAt", "updatedAt", "communityId"],
+        },
+      },
+    });
     const amount = await Member.count({ where: { communityId } });
     res.status(200).json({ community: { ...community.toJSON(), amount } });
   } catch (err) {
@@ -223,6 +231,20 @@ exports.approvePostRequest = async (req, res, next) => {
     const { postId } = req.params;
     await Post.update({ status: true }, { where: { postId } });
     res.status(201).json({ message: "Post has been approved" });
+  } catch (err) {
+    next(err);
+  }
+};
+
+exports.checkMemberinCommu = async (req, res, next) => {
+  try {
+    const { id } = req.user;
+    const { communityId } = req.body;
+    const result = await Member.findOne({ where: { communityId, userId: id } });
+    if (result) {
+      return res.json({ member: result });
+    }
+    res.json({ message: true });
   } catch (err) {
     next(err);
   }

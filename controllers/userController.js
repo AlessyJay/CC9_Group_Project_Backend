@@ -1,8 +1,8 @@
-const jwt = require('jsonwebtoken');
-const { User } = require('../models');
-const bcrypt = require('bcryptjs');
-const { uploadPromise } = require('./uploadCloud');
-const fs = require('fs');
+const jwt = require("jsonwebtoken");
+const { User } = require("../models");
+const bcrypt = require("bcryptjs");
+const { uploadPromise } = require("./uploadCloud");
+const fs = require("fs");
 
 exports.userLoginGoogle = async (req, res, next) => {
   try {
@@ -30,10 +30,10 @@ exports.userLoginGoogle = async (req, res, next) => {
         bannerUrl: user.bannerUrl,
         description: user.description,
       };
-      const token = jwt.sign(payload, 'GroupProjectRedditClone', {
+      const token = jwt.sign(payload, "GroupProjectRedditClone", {
         expiresIn: 60 * 60 * 24 * 30,
       });
-      res.status(200).json({ message: 'Success logged in', token });
+      res.status(200).json({ message: "Success logged in", token });
     } else {
       const payload = {
         id: findUser.id,
@@ -45,10 +45,10 @@ exports.userLoginGoogle = async (req, res, next) => {
         bannerUrl: findUser.bannerUrl,
         description: findUser.description,
       };
-      const token = jwt.sign(payload, 'GroupProjectRedditClone', {
+      const token = jwt.sign(payload, "GroupProjectRedditClone", {
         expiresIn: 60 * 60 * 24 * 30,
       });
-      res.status(200).json({ message: 'Success logged in', token });
+      res.status(200).json({ message: "Success logged in", token });
     }
   } catch (err) {
     next(err);
@@ -80,11 +80,11 @@ exports.userLoginFacebook = async (req, res, next) => {
         bannerUrl: user.bannerUrl,
         description: user.description,
       };
-      const token = jwt.sign(payload, 'GroupProjectRedditClone', {
+      const token = jwt.sign(payload, "GroupProjectRedditClone", {
         expiresIn: 60 * 60 * 24 * 30,
       });
       console.log(token);
-      res.status(200).json({ message: 'Success logged in', token });
+      res.status(200).json({ message: "Success logged in", token });
     } else {
       const payload = {
         id: findUser.id,
@@ -96,11 +96,11 @@ exports.userLoginFacebook = async (req, res, next) => {
         bannerUrl: findUser.bannerUrl,
         description: findUser.description,
       };
-      const token = jwt.sign(payload, 'GroupProjectRedditClone', {
+      const token = jwt.sign(payload, "GroupProjectRedditClone", {
         expiresIn: 60 * 60 * 24 * 30,
       });
       console.log(token);
-      res.status(200).json({ message: 'Success logged in', token });
+      res.status(200).json({ message: "Success logged in", token });
     }
   } catch (err) {
     next(err);
@@ -117,11 +117,11 @@ exports.userLoginform = async (req, res, next) => {
 
     // Checking email or username
     if (!user)
-      return res.status(400).json({ message: 'Incorrect Email or Password' });
+      return res.status(400).json({ message: "Incorrect Email or Password" });
     // Checking password
     const isCorrectPassword = await bcrypt.compare(password, user.password);
     if (!isCorrectPassword)
-      return res.status(400).json({ message: 'Incorrect Email or Password' });
+      return res.status(400).json({ message: "Incorrect Email or Password" });
 
     const payload = {
       id: user.id,
@@ -134,10 +134,10 @@ exports.userLoginform = async (req, res, next) => {
       description: user.description,
     };
 
-    const token = jwt.sign(payload, 'GroupProjectRedditClone', {
+    const token = jwt.sign(payload, "GroupProjectRedditClone", {
       expiresIn: 60 * 60 * 24 * 30,
     });
-    res.status(200).json({ message: 'Success logged in', token });
+    res.status(200).json({ message: "Success logged in", token });
   } catch (err) {
     next(err);
   }
@@ -150,14 +150,14 @@ exports.userRegisterform = async (req, res, next) => {
 
     // check password === confirm
     if (password !== confirmpassword)
-      return res.status(400).json({ message: 'Confirm password is not match' });
+      return res.status(400).json({ message: "Confirm password is not match" });
 
     // // check username
     const findUserName = await User.findOne({ where: { username } });
     if (findUserName)
       return res
         .status(400)
-        .json({ message: 'Username is already being used' });
+        .json({ message: "Username is already being used" });
 
     const hashedPassword = await bcrypt.hash(password, 12);
     const newUser = {
@@ -176,7 +176,7 @@ exports.verifyUserforReset = async (req, res, next) => {
     const { email, username } = req.body;
     const user = await User.findOne({ where: { username, email } });
     if (!user)
-      return res.status(400).json({ message: 'Incorrect Email or Username' });
+      return res.status(400).json({ message: "Incorrect Email or Username" });
     res.json({ message: `Verify`, id: user.id });
   } catch (err) {
     next(err);
@@ -195,10 +195,10 @@ exports.resetpassword = async (req, res, next) => {
     if (!rows)
       return res
         .status(400)
-        .json({ message: 'Something wrong!', status: 'failed' });
+        .json({ message: "Something wrong!", status: "failed" });
     res
       .status(201)
-      .json({ message: 'Password changed successfully', status: 'success' });
+      .json({ message: "Password changed successfully", status: "success" });
   } catch (err) {
     next(err);
   }
@@ -207,31 +207,30 @@ exports.resetpassword = async (req, res, next) => {
 exports.updateProfileImg = async (req, res, next) => {
   try {
     const { id } = req.user;
-    const { username, descriptions } = req.body;
-    const result = await uploadPromise(req.file.path);
-    fs.unlinkSync(req.file.path);
+    const { description } = req.body;
+
     if (req.file) {
+      const result = await uploadPromise(req.file.path);
+      fs.unlinkSync(req.file.path);
       const rows = await User.update(
         {
-          username,
-          descriptions,
+          description,
           profileUrl: result.secure_url,
         },
         { where: { id } }
       );
-      if (!rows) return res.status(400).json({ message: 'Id does not match' });
-      res.status(201).json({ message: 'Update profile success' });
+      if (!rows) return res.status(400).json({ message: "Id does not match" });
+      res.status(201).json({ message: "Update profile success" });
     } else {
       const rows = await User.update(
         {
-          username,
-          descriptions,
+          description,
         },
         { where: { id } }
       );
+      if (!rows) return res.status(400).json({ message: "Id does not match" });
+      res.status(201).json({ message: "Update profile success" });
     }
-    if (!rows) return res.status(400).json({ message: 'Id does not match' });
-    res.status(201).json({ message: 'Update profile success' });
   } catch (err) {
     next(err);
   }
@@ -247,21 +246,34 @@ exports.updateBannerImg = async (req, res, next) => {
       },
       { where: { id } }
     );
-    if (!rows) return res.status(400).json({ message: 'Id does not match' });
-    res.status(201).json({ message: 'Update banner success' });
+    if (!rows) return res.status(400).json({ message: "Id does not match" });
+    res.status(201).json({ message: "Update banner success" });
   } catch (err) {
     next(err);
   }
 };
 
+exports.checkUsername = async (req, res, next) => {
+  try {
+    const { username } = req.body;
+    const checkUsername = await User.findOne({ where: { username } });
+    if (checkUsername) {
+      return res.status(400).json({ message: "Username already used" });
+    } else {
+      return res.status(200).json({ message: "Verify" });
+    }
+  } catch (err) {
+    next(err);
+  }
+};
 exports.updateProfile = async (req, res, next) => {
   try {
     const { id } = req.user;
     const { username, description } = req.body;
     // check username in system
-    const checkUsername = await User.findOne({ where: username });
-    if (!checkUsername)
-      return res.status(400).json({ message: 'Username already used' });
+    const checkUsername = await User.findOne({ where: { username } });
+    if (checkUsername)
+      return res.status(400).json({ message: "Username already used" });
     const rows = await User.update(
       {
         username,
@@ -269,7 +281,7 @@ exports.updateProfile = async (req, res, next) => {
       },
       { where: { id } }
     );
-    if (!rows) return res.status(400).json({ message: 'Id does not match' });
+    if (!rows) return res.status(400).json({ message: "Id does not match" });
   } catch (err) {
     next(err);
   }
@@ -281,7 +293,7 @@ exports.getUserProfilebyId = async (req, res, next) => {
     const { id } = req.params;
     const user = await User.findOne({ where: { id } });
     if (!user)
-      return res.status(400).json({ message: 'This user cannot found' });
+      return res.status(400).json({ message: "This user cannot found" });
     res.status(200).json({ user });
   } catch (err) {
     next(err);

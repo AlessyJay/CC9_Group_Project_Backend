@@ -1,20 +1,20 @@
-const express = require('express');
-require('dotenv').config();
+const express = require("express");
+require("dotenv").config();
 const app = express();
-const cors = require('cors');
-const userRoute = require('./routes/userRoute');
-const feedRoute = require('./routes/feedRoute');
-const commuRoute = require('./routes/commuRoute');
-const commentRoute = require('./routes/commentRoute');
-const postRoute = require('./routes/postRoute');
-const notificationRoute = require('./routes/notificationRoute');
-const errorController = require('./controllers/errorController');
-const passport = require('passport');
-require('./config/passport');
-// const { sequelize } = require('./models');
+const cors = require("cors");
+const userRoute = require("./routes/userRoute");
+const feedRoute = require("./routes/feedRoute");
+const commuRoute = require("./routes/commuRoute");
+const commentRoute = require("./routes/commentRoute");
+const postRoute = require("./routes/postRoute");
+const notificationRoute = require("./routes/notificationRoute");
+const errorController = require("./controllers/errorController");
+const passport = require("passport");
+require("./config/passport");
+// const { sequelize } = require("./models");
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
-app.use('/public', express.static('public'));
+app.use("/public", express.static("public"));
 app.use(cors());
 
 /////////////////////////////// Route ต่างๆ
@@ -23,15 +23,15 @@ app.use(cors());
 //////////////////////////////////////////
 
 app.use(passport.initialize());
-app.use('/users', userRoute);
-app.use('/feeds', feedRoute);
-app.use('/communities', commuRoute);
-app.use('/comments', commentRoute);
-app.use('/posts', postRoute);
-app.use('/notifications', notificationRoute);
+app.use("/users", userRoute);
+app.use("/feeds", feedRoute);
+app.use("/communities", commuRoute);
+app.use("/comments", commentRoute);
+app.use("/posts", postRoute);
+app.use("/notifications", notificationRoute);
 //Page not found 404
 app.use((req, res, next) => {
-  res.status(404).json({ message: 'this resource is not found' });
+  res.status(404).json({ message: "this resource is not found" });
 });
 
 // Error Middleware
