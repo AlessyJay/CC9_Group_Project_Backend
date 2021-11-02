@@ -266,10 +266,10 @@ exports.checkUsername = async (req, res, next) => {
     next(err);
   }
 };
-exports.updateProfile = async (req, res, next) => {
+exports.updateUsername = async (req, res, next) => {
   try {
     const { id } = req.user;
-    const { username, description } = req.body;
+    const { username } = req.body;
     // check username in system
     const checkUsername = await User.findOne({ where: { username } });
     if (checkUsername)
@@ -277,11 +277,11 @@ exports.updateProfile = async (req, res, next) => {
     const rows = await User.update(
       {
         username,
-        description,
       },
       { where: { id } }
     );
     if (!rows) return res.status(400).json({ message: "Id does not match" });
+    res.status(201).json({ message: "Updated sucessfully" });
   } catch (err) {
     next(err);
   }

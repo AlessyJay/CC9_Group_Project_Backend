@@ -12,7 +12,7 @@ const {
   userRegisterform,
   resetpassword,
   verifyUserforReset,
-  updateProfile,
+  updateUsername,
   updateProfileImg,
   updateBannerImg,
   getUserProfilebyId,
@@ -36,8 +36,8 @@ router.put(
   updateProfileImg
 );
 router.put("/updateBanner", authenticateUser, uploadBranner, updateBannerImg);
-// router.put("/updateUserProfile", authenticateUser, updateProfile);
 router.get("/:id", getUserProfilebyId);
-router.post("/check/username", checkUsername);
+// router.put("/updateusername", authenticateUser, updateUsername);
+// router.post("/check/username", checkUsername);
 
 module.exports = router;
