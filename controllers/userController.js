@@ -107,6 +107,32 @@ exports.userLoginFacebook = async (req, res, next) => {
   }
 };
 
+exports.getNewToken = async (req, res, next) => {
+  try {
+    const { id } = req.user;
+    const user = await User.findOne({
+      where: { id },
+    });
+    if (!user) return res.status(400).json({ message: "Id doesnot match" });
+    const payload = {
+      id: user.id,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      email: user.email,
+      username: user.username,
+      profileUrl: user.profileUrl,
+      bannerUrl: user.bannerUrl,
+      description: user.description,
+    };
+    console.log(user);
+    const token = jwt.sign(payload, "GroupProjectRedditClone", {
+      expiresIn: 60 * 60 * 24 * 30,
+    });
+    res.json({ token });
+  } catch (err) {
+    next(err);
+  }
+};
 // Login Form
 exports.userLoginform = async (req, res, next) => {
   try {
@@ -129,8 +155,8 @@ exports.userLoginform = async (req, res, next) => {
       lastName: user.lastName,
       email: user.email,
       username: user.username,
-      profileUrl: user.profile_url,
-      bannerUrl: user.banner_url,
+      profileUrl: user.profileUrl,
+      bannerUrl: user.bannerUrl,
       description: user.description,
     };
 
