@@ -6,8 +6,8 @@ const {
   UserInteraction,
   Post,
   sequelize,
-} = require('../models');
-const { Op } = require('sequelize');
+} = require("../models");
+const { Op } = require("sequelize");
 
 // สำหรับดึงข้อมูล Comminity และ user
 exports.getAllUserCommu = async (req, res, next) => {
@@ -15,17 +15,17 @@ exports.getAllUserCommu = async (req, res, next) => {
     const user = await User.findAll({
       attributes: {
         exclude: [
-          'createdAt',
-          'updatedAt',
-          'googleId',
-          'facebookId',
-          'password',
+          "createdAt",
+          "updatedAt",
+          "googleId",
+          "facebookId",
+          "password",
         ],
       },
     });
     const community = await Community.findAll({
       attributes: {
-        exclude: ['createdAt', 'updatedAt'],
+        exclude: ["createdAt", "updatedAt"],
       },
     });
     const arr = [...user, ...community];
@@ -42,11 +42,11 @@ exports.getAllJoinedCommunity = async (req, res, next) => {
     // const { id } = req.user;
     const communityLists = await Member.findAll({
       where: { userId: 1 },
-      attributes: { exclude: ['createdAt', 'updatedAt'] },
+      attributes: { exclude: ["createdAt", "updatedAt"] },
       include: [
         {
           model: Community,
-          attributes: { exclude: ['createdAt', 'updatedAt'] },
+          attributes: { exclude: ["createdAt", "updatedAt"] },
         },
       ],
     });
@@ -134,7 +134,7 @@ exports.getAllCommunity = async (req, res, next) => {
     //   ],
     // });
     const communityLists = await sequelize.query(
-      'select c.id as id, c.name as name, c.profile_url as profile_url, c.banner_url as banner_url, c.type as type, count(m.community_id) as amount from communities c left join members m on c.id = m.community_id group by c.name order by amount  desc',
+      "select c.id as id, c.name as name, c.profile_url as profile_url, c.banner_url as banner_url, c.type as type, count(m.community_id) as amount from communities c left join members m on c.id = m.community_id group by c.name order by amount  desc",
       { type: sequelize.QueryTypes.SELECT }
     );
     console.log(communityLists);
@@ -149,12 +149,12 @@ exports.getFeedUserOverviewTab = async (req, res, next) => {
     // const { id } = req.user;
     const feedLists = await Post.findAll({
       where: { userId: 1, status: true },
-      order: [['updatedAt', 'DESC']],
+      order: [["updatedAt", "DESC"]],
       include: [
         { model: Comment },
         {
           model: UserInteraction,
-          attributes: ['isLiked', 'isHided', 'isSaved', 'userId', 'postId'],
+          attributes: ["isLiked", "isHided", "isSaved", "userId", "postId"],
         },
       ],
     });
@@ -176,12 +176,12 @@ exports.getFeedUserPostTab = async (req, res, next) => {
     const { id } = req.user;
     const feedLists = await Post.findAll({
       where: { userId: id },
-      order: [['updatedAt', 'DESC']],
+      order: [["updatedAt", "DESC"]],
       include: [
         { model: Comment },
         {
           model: UserInteraction,
-          attributes: ['isLiked', 'isHided', 'isSaved', 'userId', 'postId'],
+          attributes: ["isLiked", "isHided", "isSaved", "userId", "postId"],
         },
       ],
     });
@@ -201,10 +201,10 @@ exports.getFeedUserHide = async (req, res, next) => {
     const { id } = req.user;
     const feedLists = await UserInteraction.findAll({
       where: { userId: id, isHided: true },
-      attributes: { exclude: ['createdAt', 'updatedAt'] },
+      attributes: { exclude: ["createdAt", "updatedAt"] },
       include: {
         model: Post,
-        order: [['updatedAt', 'DESC']],
+        order: [["updatedAt", "DESC"]],
       },
     });
     const newfeedLists = feedLists.map((item) => {
@@ -222,10 +222,10 @@ exports.getFeedUserSave = async (req, res, next) => {
     const { id } = req.user;
     const feedLists = await UserInteraction.findAll({
       where: { userId: id, isSaved: true },
-      attributes: { exclude: ['createdAt', 'updatedAt'] },
+      attributes: { exclude: ["createdAt", "updatedAt"] },
       include: {
         model: Post,
-        order: [['updatedAt', 'DESC']],
+        order: [["updatedAt", "DESC"]],
       },
     });
     const newfeedLists = feedLists.map((item) => {
@@ -248,12 +248,13 @@ exports.getAllCommnutyPostMainPage = async (req, res, next) => {
         { model: Comment },
         {
           model: User,
-          attributes: ['id', 'username', 'profileUrl'],
+          attributes: ["id", "username", "profileUrl"],
         },
         { model: Community },
         {
           model: UserInteraction,
-          attributes: ['isLiked', 'isHided', 'isSaved', 'userId', 'postId'],
+          where: { isHided: true },
+          attributes: ["isLiked", "isHided", "isSaved", "userId", "postId"],
         },
       ],
     });
@@ -271,12 +272,12 @@ exports.getAllCommnutyPostMainPage = async (req, res, next) => {
 exports.getFeedPopularMain = async (req, res, next) => {
   try {
     const postLists = await Post.findAll({
-      order: [['like', 'DESC']],
+      order: [["like", "DESC"]],
       include: [
         { model: Comment },
         {
           model: UserInteraction,
-          attributes: ['isLiked', 'isHided', 'isSaved', 'userId', 'postId'],
+          attributes: ["isLiked", "isHided", "isSaved", "userId", "postId"],
         },
       ],
     });
@@ -296,12 +297,12 @@ exports.getFeedPopularUser = async (req, res, next) => {
     const { id } = req.user;
     const postLists = await Post.findAll({
       where: { userId: id, communityId: null },
-      order: [['like', 'DESC']],
+      order: [["like", "DESC"]],
       include: [
         { model: Comment },
         {
           model: UserInteraction,
-          attributes: ['isLiked', 'isHided', 'isSaved', 'userId', 'postId'],
+          attributes: ["isLiked", "isHided", "isSaved", "userId", "postId"],
         },
       ],
     });

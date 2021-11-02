@@ -16,6 +16,7 @@ exports.createComment = async (req, res, next) => {
         postId,
         userId: id,
         isSeen: false,
+        commentId: comment.id,
       });
       res.status(200).json({ comment, notification });
     }
@@ -42,9 +43,9 @@ exports.editComment = async (req, res, next) => {
 exports.deleteComment = async (req, res, next) => {
   try {
     const { id } = req.user;
-    const { postId } = req.params;
-    await Notification.destroy({ where: { postId, userId: id } });
-    await Comment.destroy({ where: { id: postId } });
+    const { commentId } = req.params;
+    await Notification.destroy({ where: { commentId, userId: id } });
+    await Comment.destroy({ where: { id: commentId } });
     res.status(204);
   } catch (err) {
     next(err);
