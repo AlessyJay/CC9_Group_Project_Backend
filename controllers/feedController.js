@@ -238,6 +238,7 @@ exports.getFeedUserHide = async (req, res, next) => {
       include: {
         model: Post,
         order: [["updatedAt", "DESC"]],
+        include: [{ model: User }, { model: Community }],
       },
     });
     const newfeedLists = feedLists.map((item) => {
@@ -259,6 +260,7 @@ exports.getFeedUserSave = async (req, res, next) => {
       include: {
         model: Post,
         order: [["updatedAt", "DESC"]],
+        include: [{ model: User }, { model: Community }],
       },
     });
     const newfeedLists = feedLists.map((item) => {
