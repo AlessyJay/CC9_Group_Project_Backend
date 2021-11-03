@@ -1,12 +1,4 @@
-const {
-  Community,
-  Comment,
-  User,
-  Member,
-  UserInteraction,
-  Post,
-  sequelize,
-} = require("../models");
+const { Community, Comment, User, Member, UserInteraction, Post, sequelize } = require("../models");
 const { Op } = require("sequelize");
 
 // สำหรับดึงข้อมูล Comminity และ user
@@ -14,13 +6,7 @@ exports.getAllUserCommu = async (req, res, next) => {
   try {
     const user = await User.findAll({
       attributes: {
-        exclude: [
-          "createdAt",
-          "updatedAt",
-          "googleId",
-          "facebookId",
-          "password",
-        ],
+        exclude: ["createdAt", "updatedAt", "googleId", "facebookId", "password"],
       },
     });
     const community = await Community.findAll({
@@ -39,9 +25,9 @@ exports.getAllUserCommu = async (req, res, next) => {
 // select * from members join (select c.id as id, c.name as name, c.profile_url as profile_url, c.banner_url as banner_url, c.type as type, count(m.community_id) as amount from communities c join members m on c.id = m.community_id group by m.community_id) t on t.id = members.community_id where members.user_id =2
 exports.getAllJoinedCommunity = async (req, res, next) => {
   try {
-    // const { id } = req.user;
+    const { id } = req.user;
     const communityLists = await Member.findAll({
-      where: { userId: 1 },
+      where: { userId: id },
       attributes: { exclude: ["createdAt", "updatedAt"] },
       include: [
         {
@@ -50,18 +36,18 @@ exports.getAllJoinedCommunity = async (req, res, next) => {
         },
       ],
     });
-    const arrCommu = communityLists.map((item) => item.Community.name);
+    const arrCommu = communityLists.map(item => item.Community.name);
     const amount = await Community.findAll({
       where: { name: { [Op.or]: arrCommu } },
       include: [{ model: Member }],
     });
-    const t = amount.map((item) => {
+    const t = amount.map(item => {
       return { name: item.name, value: item.Members.length };
     });
     // console.log(t);
     const arr = [];
-    communityLists.map((item) => {
-      t.map((v) => {
+    communityLists.map(item => {
+      t.map(v => {
         if (item.Community.name === v.name) {
           arr.push({ ...item.toJSON(), amount: v.value });
         }
@@ -156,10 +142,41 @@ exports.getFeedUserOverviewTab = async (req, res, next) => {
           model: UserInteraction,
           attributes: ["isLiked", "isHided", "isSaved", "userId", "postId"],
         },
+        { model: User },
+        { model: Community },
       ],
     });
 
-    const newfeedLists = feedLists.map((item) => {
+    const newfeedLists = feedLists.map(item => {
+      if (!item.imageUrl) {
+        return item;
+      } else return { ...item.toJSON(), imageUrl: JSON.parse(item.imageUrl) };
+    });
+
+    res.status(200).json({ feedLists: newfeedLists });
+  } catch (err) {
+    next(err);
+  }
+};
+
+exports.getPostOverviewbyUserId = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const feedLists = await Post.findAll({
+      where: { userId: id, status: true },
+      order: [["updatedAt", "DESC"]],
+      include: [
+        { model: Comment },
+        {
+          model: UserInteraction,
+          attributes: ["isLiked", "isHided", "isSaved", "userId", "postId"],
+        },
+        { model: User },
+        { model: Community },
+      ],
+    });
+
+    const newfeedLists = feedLists.map(item => {
       if (!item.imageUrl) {
         return item;
       } else return { ...item.toJSON(), imageUrl: JSON.parse(item.imageUrl) };
@@ -183,9 +200,11 @@ exports.getFeedUserPostTab = async (req, res, next) => {
           model: UserInteraction,
           attributes: ["isLiked", "isHided", "isSaved", "userId", "postId"],
         },
+        { model: User },
+        { model: Community },
       ],
     });
-    const newfeedLists = feedLists.map((item) => {
+    const newfeedLists = feedLists.map(item => {
       if (!item.imageUrl) {
         return item;
       } else return { ...item.toJSON(), imageUrl: JSON.parse(item.imageUrl) };
@@ -207,9 +226,8 @@ exports.getFeedUserHide = async (req, res, next) => {
         order: [["updatedAt", "DESC"]],
       },
     });
-    const newfeedLists = feedLists.map((item) => {
-      if (item.Post.imageUrl)
-        item.Post.imageUrl = JSON.parse(item.Post.imageUrl);
+    const newfeedLists = feedLists.map(item => {
+      if (item.Post.imageUrl) item.Post.imageUrl = JSON.parse(item.Post.imageUrl);
       return item;
     });
     res.status(200).json({ feedLists: newfeedLists });
@@ -228,9 +246,8 @@ exports.getFeedUserSave = async (req, res, next) => {
         order: [["updatedAt", "DESC"]],
       },
     });
-    const newfeedLists = feedLists.map((item) => {
-      if (item.Post.imageUrl)
-        item.Post.imageUrl = JSON.parse(item.Post.imageUrl);
+    const newfeedLists = feedLists.map(item => {
+      if (item.Post.imageUrl) item.Post.imageUrl = JSON.parse(item.Post.imageUrl);
       return item;
     });
     res.status(200).json({ feedLists: newfeedLists });
@@ -258,7 +275,7 @@ exports.getAllCommnutyPostMainPage = async (req, res, next) => {
         },
       ],
     });
-    const newfeedLists = postLists.map((item) => {
+    const newfeedLists = postLists.map(item => {
       if (!item.imageUrl) {
         return item;
       } else return { ...item.toJSON(), imageUrl: JSON.parse(item.imageUrl) };
@@ -282,7 +299,7 @@ exports.getFeedPopularMain = async (req, res, next) => {
       ],
     });
 
-    const newfeedLists = postLists.map((item) => {
+    const newfeedLists = postLists.map(item => {
       if (!item.imageUrl) {
         return item;
       } else return { ...item.toJSON(), imageUrl: JSON.parse(item.imageUrl) };
@@ -307,7 +324,7 @@ exports.getFeedPopularUser = async (req, res, next) => {
       ],
     });
 
-    const newfeedLists = postLists.map((item) => {
+    const newfeedLists = postLists.map(item => {
       if (!item.imageUrl) {
         return item;
       } else return { ...item.toJSON(), imageUrl: JSON.parse(item.imageUrl) };
