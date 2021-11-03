@@ -44,6 +44,7 @@ exports.userLoginGoogle = async (req, res, next) => {
         profileUrl: findUser.profileUrl,
         bannerUrl: findUser.bannerUrl,
         description: findUser.description,
+        createdAt: findUser.createdAt,
       };
       const token = jwt.sign(payload, "GroupProjectRedditClone", {
         expiresIn: 60 * 60 * 24 * 30,
@@ -79,6 +80,7 @@ exports.userLoginFacebook = async (req, res, next) => {
         profileUrl: user.profileUrl,
         bannerUrl: user.bannerUrl,
         description: user.description,
+        createdAt: user.createdAt,
       };
       const token = jwt.sign(payload, "GroupProjectRedditClone", {
         expiresIn: 60 * 60 * 24 * 30,
@@ -95,6 +97,7 @@ exports.userLoginFacebook = async (req, res, next) => {
         profileUrl: findUser.profileUrl,
         bannerUrl: findUser.bannerUrl,
         description: findUser.description,
+        createdAt: findUser.createdAt,
       };
       const token = jwt.sign(payload, "GroupProjectRedditClone", {
         expiresIn: 60 * 60 * 24 * 30,
@@ -123,6 +126,7 @@ exports.getNewToken = async (req, res, next) => {
       profileUrl: user.profileUrl,
       bannerUrl: user.bannerUrl,
       description: user.description,
+      createdAt: user.createdAt,
     };
     console.log(user);
     const token = jwt.sign(payload, "GroupProjectRedditClone", {
@@ -158,6 +162,7 @@ exports.userLoginform = async (req, res, next) => {
       profileUrl: user.profileUrl,
       bannerUrl: user.bannerUrl,
       description: user.description,
+      createdAt: user.createdAt,
     };
 
     const token = jwt.sign(payload, "GroupProjectRedditClone", {

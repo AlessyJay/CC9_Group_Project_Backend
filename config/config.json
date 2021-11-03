@@ -1,7 +1,7 @@
 {
   "development": {
     "username": "root",
-    "password": "zau8siox",
+    "password": "046012574",
     "database": "reddit_clone",
     "host": "127.0.0.1",
     "dialect": "mysql"

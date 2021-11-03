@@ -1,4 +1,12 @@
-const { Community, Comment, User, Member, UserInteraction, Post, sequelize } = require("../models");
+const {
+  Community,
+  Comment,
+  User,
+  Member,
+  UserInteraction,
+  Post,
+  sequelize,
+} = require("../models");
 const { Op } = require("sequelize");
 
 // สำหรับดึงข้อมูล Comminity และ user
@@ -6,7 +14,13 @@ exports.getAllUserCommu = async (req, res, next) => {
   try {
     const user = await User.findAll({
       attributes: {
-        exclude: ["createdAt", "updatedAt", "googleId", "facebookId", "password"],
+        exclude: [
+          "createdAt",
+          "updatedAt",
+          "googleId",
+          "facebookId",
+          "password",
+        ],
       },
     });
     const community = await Community.findAll({
@@ -36,18 +50,18 @@ exports.getAllJoinedCommunity = async (req, res, next) => {
         },
       ],
     });
-    const arrCommu = communityLists.map(item => item.Community.name);
+    const arrCommu = communityLists.map((item) => item.Community.name);
     const amount = await Community.findAll({
       where: { name: { [Op.or]: arrCommu } },
       include: [{ model: Member }],
     });
-    const t = amount.map(item => {
+    const t = amount.map((item) => {
       return { name: item.name, value: item.Members.length };
     });
     // console.log(t);
     const arr = [];
-    communityLists.map(item => {
-      t.map(v => {
+    communityLists.map((item) => {
+      t.map((v) => {
         if (item.Community.name === v.name) {
           arr.push({ ...item.toJSON(), amount: v.value });
         }
@@ -132,7 +146,7 @@ exports.getAllCommunity = async (req, res, next) => {
 // หน้า User Feed จะแสดงอันที่ post แล้วเท่านั้น
 exports.getFeedUserOverviewTab = async (req, res, next) => {
   try {
-    const { id } = req.user;
+    const { id } = req.params;
     const feedLists = await Post.findAll({
       where: { userId: id, status: true },
       order: [["updatedAt", "DESC"]],
@@ -147,7 +161,7 @@ exports.getFeedUserOverviewTab = async (req, res, next) => {
       ],
     });
 
-    const newfeedLists = feedLists.map(item => {
+    const newfeedLists = feedLists.map((item) => {
       if (!item.imageUrl) {
         return item;
       } else return { ...item.toJSON(), imageUrl: JSON.parse(item.imageUrl) };
@@ -176,7 +190,7 @@ exports.getPostOverviewbyUserId = async (req, res, next) => {
       ],
     });
 
-    const newfeedLists = feedLists.map(item => {
+    const newfeedLists = feedLists.map((item) => {
       if (!item.imageUrl) {
         return item;
       } else return { ...item.toJSON(), imageUrl: JSON.parse(item.imageUrl) };
@@ -204,7 +218,7 @@ exports.getFeedUserPostTab = async (req, res, next) => {
         { model: Community },
       ],
     });
-    const newfeedLists = feedLists.map(item => {
+    const newfeedLists = feedLists.map((item) => {
       if (!item.imageUrl) {
         return item;
       } else return { ...item.toJSON(), imageUrl: JSON.parse(item.imageUrl) };
@@ -226,8 +240,9 @@ exports.getFeedUserHide = async (req, res, next) => {
         order: [["updatedAt", "DESC"]],
       },
     });
-    const newfeedLists = feedLists.map(item => {
-      if (item.Post.imageUrl) item.Post.imageUrl = JSON.parse(item.Post.imageUrl);
+    const newfeedLists = feedLists.map((item) => {
+      if (item.Post.imageUrl)
+        item.Post.imageUrl = JSON.parse(item.Post.imageUrl);
       return item;
     });
     res.status(200).json({ feedLists: newfeedLists });
@@ -246,8 +261,9 @@ exports.getFeedUserSave = async (req, res, next) => {
         order: [["updatedAt", "DESC"]],
       },
     });
-    const newfeedLists = feedLists.map(item => {
-      if (item.Post.imageUrl) item.Post.imageUrl = JSON.parse(item.Post.imageUrl);
+    const newfeedLists = feedLists.map((item) => {
+      if (item.Post.imageUrl)
+        item.Post.imageUrl = JSON.parse(item.Post.imageUrl);
       return item;
     });
     res.status(200).json({ feedLists: newfeedLists });
@@ -258,6 +274,36 @@ exports.getFeedUserSave = async (req, res, next) => {
 
 // Main Feed see only content from community
 exports.getAllCommnutyPostMainPage = async (req, res, next) => {
+  try {
+    const { id } = req.user;
+    const postLists = await Post.findAll({
+      where: { communityId: { [Op.not]: null } },
+      include: [
+        { model: Comment },
+        {
+          model: User,
+          attributes: ["id", "username", "profileUrl"],
+        },
+        { model: Community },
+        {
+          model: UserInteraction,
+          attributes: ["isLiked", "isHided", "isSaved", "userId", "postId"],
+        },
+      ],
+    });
+    const newfeedLists = postLists.map((item) => {
+      if (!item.imageUrl) {
+        return item;
+      } else return { ...item.toJSON(), imageUrl: JSON.parse(item.imageUrl) };
+    });
+    res.status(200).json({ feedLists: newfeedLists });
+  } catch (err) {
+    next(err);
+  }
+};
+
+// Post Main page for guest
+exports.getAllCommnutyPostMainPageGuest = async (req, res, next) => {
   try {
     const postLists = await Post.findAll({
       where: { communityId: { [Op.not]: null } },
@@ -270,12 +316,11 @@ exports.getAllCommnutyPostMainPage = async (req, res, next) => {
         { model: Community },
         {
           model: UserInteraction,
-          where: { isHided: false },
           attributes: ["isLiked", "isHided", "isSaved", "userId", "postId"],
         },
       ],
     });
-    const newfeedLists = postLists.map(item => {
+    const newfeedLists = postLists.map((item) => {
       if (!item.imageUrl) {
         return item;
       } else return { ...item.toJSON(), imageUrl: JSON.parse(item.imageUrl) };
@@ -299,7 +344,7 @@ exports.getFeedPopularMain = async (req, res, next) => {
       ],
     });
 
-    const newfeedLists = postLists.map(item => {
+    const newfeedLists = postLists.map((item) => {
       if (!item.imageUrl) {
         return item;
       } else return { ...item.toJSON(), imageUrl: JSON.parse(item.imageUrl) };
@@ -324,7 +369,7 @@ exports.getFeedPopularUser = async (req, res, next) => {
       ],
     });
 
-    const newfeedLists = postLists.map(item => {
+    const newfeedLists = postLists.map((item) => {
       if (!item.imageUrl) {
         return item;
       } else return { ...item.toJSON(), imageUrl: JSON.parse(item.imageUrl) };

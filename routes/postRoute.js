@@ -22,10 +22,12 @@ const {
   userEditPost,
   getPostbyId,
   createDraftPost,
+  getUserInteractionOnPost,
 } = postController;
 
 router.put("/drafts/:draftId", authenticateUser, uploadMultiple, userEditDraft);
 router.get("/drafts", authenticateUser, getDraftPost);
+router.get("/getaction", authenticateUser, getUserInteractionOnPost);
 router.get("/:id", getPostbyId);
 router.post("/createpost", authenticateUser, uploadMultiple, userCreatePost);
 router.post("/savepost/:postId", authenticateUser, userSavePost);

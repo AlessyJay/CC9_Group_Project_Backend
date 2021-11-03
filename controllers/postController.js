@@ -451,10 +451,13 @@ exports.userLikePost = async (req, res, next) => {
   try {
     const { id } = req.user;
     const { postId } = req.params;
-    const { isLiked, userIdToNoti, like } = req.body;
+    const { isLiked, like } = req.body;
     // เพิ่ม - ลด จำนวน like
-    const postLike = await Post.findOne({ where: { postId } });
-    await Post.update({ like: +postLike + +like }, { where: { postId } });
+    const postLike = await Post.findOne({ where: { id: postId } });
+    await Post.update(
+      { like: +postLike.like + +like },
+      { where: { id: postId } }
+    );
     // check userinteraction
     const userHaveData = await UserInteraction.findOne({
       where: { userId: id, postId },
@@ -468,13 +471,6 @@ exports.userLikePost = async (req, res, next) => {
         },
         { where: { userId: id, postId } }
       );
-      // const noti = await Notification.create({
-      //   type: 'LIKE',
-      //   isSeen: false,
-      //   postId,
-      //   userId: id,
-      //   userIdToNoti,
-      // });
       res.status(201).json({ message: "Liked action" });
     } else {
       const interaction = await UserInteraction.create({
@@ -488,6 +484,19 @@ exports.userLikePost = async (req, res, next) => {
         .status(200)
         .json({ message: "Liked action", UserInteraction: interaction });
     }
+  } catch (err) {
+    next(err);
+  }
+};
+
+exports.getUserInteractionOnPost = async (req, res, next) => {
+  try {
+    const { id } = req.user;
+    const result = await UserInteraction.findAll({
+      where: { userId: id, isLiked: true },
+    });
+    const newData = result.map((item) => item.postId);
+    res.json({ action: newData });
   } catch (err) {
     next(err);
   }
