@@ -270,6 +270,7 @@ exports.getAllCommnutyPostMainPage = async (req, res, next) => {
         { model: Community },
         {
           model: UserInteraction,
+          where: { isHided: false },
           attributes: ["isLiked", "isHided", "isSaved", "userId", "postId"],
         },
       ],
