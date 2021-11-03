@@ -422,7 +422,7 @@ exports.userHidePost = async (req, res, next) => {
       where: { userId: id, postId },
     });
     if (userHaveData) {
-      await UserInterAction.update(
+      await UserInteraction.update(
         {
           isSaved: userHaveData.isSaved,
           isHided,
