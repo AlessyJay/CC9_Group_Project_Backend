@@ -146,9 +146,9 @@ exports.getAllCommunity = async (req, res, next) => {
 // หน้า User Feed จะแสดงอันที่ post แล้วเท่านั้น
 exports.getFeedUserOverviewTab = async (req, res, next) => {
   try {
-    // const { id } = req.user;
+    const { id } = req.user;
     const feedLists = await Post.findAll({
-      where: { userId: 1, status: true },
+      where: { userId: id, status: true },
       order: [["updatedAt", "DESC"]],
       include: [
         { model: Comment },
@@ -253,7 +253,7 @@ exports.getAllCommnutyPostMainPage = async (req, res, next) => {
         { model: Community },
         {
           model: UserInteraction,
-          where: { isHided: true },
+          where: { isHided: false },
           attributes: ["isLiked", "isHided", "isSaved", "userId", "postId"],
         },
       ],
