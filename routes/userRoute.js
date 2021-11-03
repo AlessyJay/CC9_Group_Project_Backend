@@ -17,6 +17,7 @@ const {
   updateBannerImg,
   getUserProfilebyId,
   checkUsername,
+  getNewToken,
 } = userController;
 
 const passport = require("passport");
@@ -36,6 +37,7 @@ router.put(
   updateProfileImg
 );
 router.put("/updateBanner", authenticateUser, uploadBranner, updateBannerImg);
+router.get("/newtoken", authenticateUser, getNewToken);
 router.get("/:id", getUserProfilebyId);
 // router.put("/updateusername", authenticateUser, updateUsername);
 // router.post("/check/username", checkUsername);
