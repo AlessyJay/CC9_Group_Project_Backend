@@ -4,6 +4,7 @@ exports.getNotificationByUser = async (req, res, next) => {
     const { id } = req.user;
     const result = await Notification.findAll({
       where: { userIdToNoti: id, isSeen: false },
+      order: [["createdAt", "DESC"]],
       include: [
         {
           model: User,

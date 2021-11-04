@@ -24,7 +24,7 @@ router.get("/usercommunitys", authenticateUser, getAllJoinedCommunity);
 router.get("/allcommunity", getAllCommunity);
 router.get("/mainpage", authenticateUser, getAllCommnutyPostMainPage);
 router.get("/mainpage-guest", getAllCommnutyPostMainPageGuest);
-router.get("/useroverview", getFeedUserOverviewTab);
+router.get("/useroverview/:id", getPostOverviewbyUserId);
 router.get("/userposts", authenticateUser, getFeedUserPostTab);
 router.get("/userhidepost", authenticateUser, getFeedUserHide);
 router.get("/usersavepost", authenticateUser, getFeedUserSave);

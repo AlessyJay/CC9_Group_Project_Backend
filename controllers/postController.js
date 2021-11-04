@@ -288,7 +288,6 @@ exports.getDraftPost = async (req, res, next) => {
       where: { userId: id },
       include: [{ model: Community }, { model: User }],
     });
-    console.log(draftLists);
     res.status(200).json({ draftLists });
   } catch (err) {
     next(err);
