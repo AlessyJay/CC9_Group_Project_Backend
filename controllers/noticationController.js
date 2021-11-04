@@ -3,7 +3,7 @@ exports.getNotificationByUser = async (req, res, next) => {
   try {
     const { id } = req.user;
     const result = await Notification.findAll({
-      where: { userIdToNoti: id, isSeen: false },
+      where: { userIdToNoti: id },
       order: [["createdAt", "DESC"]],
       include: [
         {
