@@ -23,6 +23,30 @@ exports.getNotificationByUser = async (req, res, next) => {
   }
 };
 
+// แสดงแค่เฉพาะอันที่ false แบบเดิม
+// exports.getNotificationByUser = async (req, res, next) => {
+//   try {
+//     const { id } = req.user;
+//     const result = await Notification.findAll({
+//       where: { userIdToNoti: id, isSeen:false },
+//       order: [["createdAt", "DESC"]],
+//       include: [
+//         {
+//           model: User,
+//           attributes: ["profileUrl", "id", "username", "bannerUrl"],
+//         },
+//         {
+//           model: Post,
+//           attributes: ["communityId", "id", "title"],
+//           include: { model: Community, attributes: ["id", "userId"] },
+//         },
+//       ],
+//     });
+//     res.status(200).json({ notification: result });
+//   } catch (err) {
+//     next(err);
+//   }
+// };
 exports.seenNotification = async (req, res, next) => {
   try {
     const { id } = req.params;
